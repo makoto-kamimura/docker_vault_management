@@ -1,0 +1,37 @@
+# 本番用 Caddyfile。LV_DOMAIN は compose の環境変数から渡される。
+# Let's Encrypt の証明書は自動取得・自動更新される。
+
+{$LV_DOMAIN} {
+	encode zstd gzip
+
+	# リクエストボディの上限（13 MB）
+	request_body {
+		max_size 13MB
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		Cache-Control "no-store"
+		-Server
+	}
+
+	# アクセスログ。Authorization / X-LV-Admin / X-LV-AuthKey などのヘッダーと
+	# ボディ・クエリは記録しない（spec §5.12）。
+	log {
+		output stdout
+		format filter {
+			wrap json
+			request>headers delete
+			request>uri regexp `\?.*` ""
+			resp_headers delete
+		}
+	}
+
+	reverse_proxy app:8787 {
+		health_uri /v1/health
+		health_interval 30s
+	}
+}

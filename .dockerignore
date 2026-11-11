@@ -1,0 +1,25 @@
+# Build context is the repo root (see platform/docker/server.Dockerfile).
+.git
+.gitignore
+node_modules
+**/node_modules
+**/dist
+**/.output
+**/.wxt
+**/.expo
+**/coverage
+**/*.tsbuildinfo
+**/*.log
+.DS_Store
+.env
+.env.*
+docs
+platform/secrets
+platform/backups
+platform/env/.env
+# Mobile and extension sources are not needed; keep package.json so the
+# pnpm workspace layout matches pnpm-lock.yaml.
+app/mobile/*
+!app/mobile/package.json
+app/extension/*
+!app/extension/package.json
