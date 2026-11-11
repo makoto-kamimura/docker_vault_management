@@ -1,0 +1,22 @@
+{
+  "name": "localvault",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.18.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "typecheck": "pnpm -r --if-present typecheck",
+    "test": "pnpm -r --if-present test",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "check:deps": "node scripts/check-banned-deps.mjs",
+    "platform:dev": "docker compose -f platform/docker/compose.dev.yml up --build",
+    "platform:down": "docker compose -f platform/docker/compose.dev.yml down"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.6",
+    "typescript": "^7.0.2"
+  }
+}

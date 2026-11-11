@@ -1,0 +1,5 @@
+packages:
+  - app/mobile
+  - app/extension
+  - app/server
+  - app/packages/*

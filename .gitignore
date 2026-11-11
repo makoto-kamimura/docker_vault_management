@@ -1,0 +1,28 @@
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+# platform
+platform/secrets/*
+!platform/secrets/.gitkeep
+platform/backups/
+# expo / react native
+.expo/
+app/mobile/ios/
+app/mobile/android/
+*.jks
+*.p8
+*.p12
+*.mobileprovision
+google-services.json
+GoogleService-Info.plist
+# extension
+.output/
+.wxt/
+web-ext.config.ts
