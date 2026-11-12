@@ -132,3 +132,17 @@ FR-12 のカウンタは本体アプリとオートフィル拡張／認証 Acti
 | 内部エラー | 想定外の失敗は 500 `E_INTERNAL`（詳細なし。クライアントは再試行可能として扱う） |
 | ログ | IP アドレスは記録しない（仕様の「30 日で削除」より厳しい） |
 | 監査ログの `deviceId` | その出来事の対象になった端末（追加・解除・要求した端末） |
+
+## VaultCore 契約の追加（W3 の結果を受けて）
+
+参照実装（`@localvault/vault-engine`）と E2E で判明した不足を、`app/packages/core/src/vault-core.ts` に反映した。Swift / Kotlin の実装も同じ形にする。
+
+| 追加・変更 | 理由 |
+|---|---|
+| `revokeDevice` に `masterPassword?` を追加 | 鍵の更新では新しい鍵セットを包む必要がある。ない場合は `E_NEEDS_MASTER_PASSWORD` |
+| `continueRotation(rotationId)`、`confirmRotation({ cursor })`、`abortRotation(rotationId)`、`isRotationPending()` | 確定リクエストの管理用署名がサーバー発行の `rotationId` を含むパスに掛かるため、`revokeDevice` だけでは一連のリクエストを返せない |
+| `applyPulled` に `hasMore?` を追加 | 全件取り直しの最終ページを VaultCore が知り、サーバーにないレコードの削除をそこで行うため |
+| `VaultNotice` 型、`drainNotices()`、イベント `onNotice` | §7.4 の「利用者に通知する」を画面へ届ける手段がなかった |
+| `buildRecoverRequest` は直前の `deriveAuthKey` に依存する | `accountId` を引数に持たないため。呼び出し順を守る |
+
+自動ロックのための前面・背面の通知（`onForeground` / `onBackground`）は契約に入れない。ネイティブ実装はアプリのライフサイクルを自分で監視する（§5.8）。開発用コアだけが、アクセス層から呼ばれる。

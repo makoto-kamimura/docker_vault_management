@@ -423,6 +423,9 @@ export class FakeVaultCore implements VaultCore {
     this.syncCursor = p.cursor;
     return { conflicts: 0, needsMasterPassword: false };
   }
+  async drainNotices() {
+    return [];
+  }
   async acceptServerState() {
     this.accepted += 1;
     this.syncCursor = 0;
@@ -453,6 +456,18 @@ export class FakeVaultCore implements VaultCore {
   }
   async revokeDevice(): Promise<ServerRequest[]> {
     return unsupported();
+  }
+  async continueRotation(): Promise<ServerRequest[]> {
+    return unsupported();
+  }
+  async confirmRotation(): Promise<void> {
+    return unsupported();
+  }
+  async abortRotation(): Promise<ServerRequest> {
+    return unsupported();
+  }
+  async isRotationPending() {
+    return false;
   }
   async getDeviceRegistration() {
     return {

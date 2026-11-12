@@ -55,6 +55,7 @@ import {
   VaultCoreError,
   type VaultCoreEventName,
   type VaultCoreEvents,
+  type VaultNotice,
   type VerifyUnlockResult,
   verifyPairingFingerprint,
   wipe,
@@ -97,17 +98,14 @@ import { readWithRecovery, removeAll, writeAtomic } from './store';
 
 // ---------------------------------------------------------------- public extras
 
-export type EngineNotice =
-  | { kind: 'server-edit-won'; id: string }
-  | { kind: 'restored-as-new'; id: string; originalId: string }
-  | { kind: 'dropped-local-edits'; count: number };
+/** Same as the contract's `VaultNotice` (kept as an alias for existing imports). */
+export type EngineNotice = VaultNotice;
 
 export interface EngineExtras {
   on<E extends VaultCoreEventName>(name: E, fn: (p: VaultCoreEvents[E]) => void): () => void;
   /** Auto-lock bookkeeping (FR-11): the native layer reports lifecycle changes. */
   onBackground(): Promise<void>;
   onForeground(): Promise<void>;
-  drainNotices(): EngineNotice[];
   searchItems(query: string): Promise<ItemSummary[]>;
   /** Trash older than 30 days becomes real deletions (§7.6). */
   purgeExpiredTrash(): Promise<number>;
@@ -670,7 +668,7 @@ class VaultEngine implements VaultCore, EngineExtras {
       );
       kept.set(r.id, { ...r, vkVersion: ks.vkVersion, nonce: enc.nonce, ct: enc.ct });
     }
-    if (dropped > 0) this.#notices.push({ kind: 'dropped-local-edits', count: dropped });
+    if (dropped > 0) this.#notify({ kind: 'dropped-local-edits', count: dropped });
     this.#recs = kept;
     file.keyset = ks;
     file.sync.cursor = 0;
@@ -702,10 +700,16 @@ class VaultEngine implements VaultCore, EngineExtras {
     if (this.#now().getTime() - at >= this.#local.autoLockSec * 1000) await this.lock();
   }
 
-  drainNotices(): EngineNotice[] {
+  async drainNotices(): Promise<VaultNotice[]> {
     const n = this.#notices;
     this.#notices = [];
     return n;
+  }
+
+  /** Queues a notice for `drainNotices` and emits `onNotice`. */
+  #notify(notice: VaultNotice): void {
+    this.#notices.push(notice);
+    this.#emit('onNotice', { notice });
   }
 
   async getStorageStatus() {
@@ -1550,14 +1554,14 @@ class VaultEngine implements VaultCore, EngineExtras {
     this.#setServerRecord(rec, serverPlain);
     switch (out.kind) {
       case 'use-server':
-        if (out.notify) this.#notices.push({ kind: 'server-edit-won', id: rec.id });
+        if (out.notify) this.#notify({ kind: 'server-edit-won', id: rec.id });
         return out.notify;
       case 'use-server-and-copy':
         await this.#putLocal(out.copy.id, out.copy.plain);
         return true;
       case 'restore-as-new':
         await this.#putLocal(out.record.id, out.record.plain);
-        this.#notices.push({ kind: 'restored-as-new', id: out.record.id, originalId: rec.id });
+        this.#notify({ kind: 'restored-as-new', id: out.record.id, originalId: rec.id });
         return true;
       case 'push':
         await this.#putLocal(rec.id, out.record);

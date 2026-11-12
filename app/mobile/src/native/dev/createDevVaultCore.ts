@@ -6,7 +6,7 @@ import type { VaultCore } from '@localvault/core';
 
 export type DevVaultCoreHandle = {
   core: VaultCore;
-  on: <E extends 'onLockStateChange' | 'onVaultChanged' | 'onSyncNeeded'>(
+  on: <E extends import('@localvault/core').VaultCoreEventName>(
     event: E,
     listener: (payload: import('@localvault/core').VaultCoreEvents[E]) => void,
   ) => () => void;

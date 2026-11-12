@@ -70,7 +70,7 @@ describe('scenario 2: two phones, offline edits, conflicts', () => {
     await b.engine.purgeItem(y.id);
     await b.syncOnce();
     await a.syncOnce();
-    const notices = b.engine.drainNotices();
+    const notices = await b.engine.drainNotices();
     expect(notices.map((n) => n.kind).sort()).toEqual(['restored-as-new', 'server-edit-won']);
     for (const p of [a, b]) {
       const notes = await Promise.all(

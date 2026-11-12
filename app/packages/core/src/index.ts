@@ -44,6 +44,7 @@ export type {
   VaultCore,
   VaultCoreEventName,
   VaultCoreEvents,
+  VaultNotice,
 } from './vault-core';
 
 import { type CryptoProvider, createNobleProvider, createWebCryptoProvider } from './crypto';

@@ -249,15 +249,24 @@ export interface VaultCore {
   getSyncState(): Promise<SyncState>;
   getPendingChanges(limit: number): Promise<RecordChange[]>;
   applyPushResults(results: PushResult[]): Promise<{ conflicts: number }>;
-  /** Rejects with E_ROLLBACK_DETECTED when the server state went backwards (§7.5). */
+  /**
+   * Rejects with E_ROLLBACK_DETECTED when the server state went backwards (§7.5).
+   * During a full resync (spec-review "サーバー実装で確定した解釈"), the caller passes
+   * `fullResync: true` on EVERY page of the restart from `since=0`, and `hasMore` from the server
+   * response so VaultCore knows when the restart is complete (records missing on the server are
+   * removed only then).
+   */
   applyPulled(p: {
     records: EncryptedRecord[];
     cursor: number;
     keyset?: Keyset;
     fullResync: boolean;
+    hasMore?: boolean;
   }): Promise<{ conflicts: number; needsMasterPassword: boolean }>;
   /** After the user accepted a rollback (§7.5). */
   acceptServerState(): Promise<void>;
+  /** Notices queued since the last call (also emitted as `onNotice`). */
+  drainNotices(): Promise<VaultNotice[]>;
 
   // ---- devices and PC approval ----
   listDevices(): Promise<DeviceInfo[]>;
@@ -274,8 +283,25 @@ export interface VaultCore {
   verifyUnlockRequest(req: PendingUnlockRequest): Promise<VerifyUnlockResult>;
   /** Biometric. E_CODE_MISMATCH carries `attemptsLeft`; at 0 the caller sends a rejection. */
   approveUnlock(p: { request: PendingUnlockRequest; typedCode: string }): Promise<ServerRequest>;
-  /** Requests are returned in the order they must be sent. */
-  revokeDevice(p: { deviceId: string; rotateKey: boolean }): Promise<ServerRequest[]>;
+  /**
+   * Requests are returned in the order they must be sent. With `rotateKey`, the chain ends with
+   * `POST /v1/rotations`; send it, then call `continueRotation` with the returned `rotationId`.
+   * `rotateKey` needs `masterPassword` (the new keyset is wrapped with it), else
+   * `E_NEEDS_MASTER_PASSWORD`. (v0.4, chunked rotation G12)
+   */
+  revokeDevice(p: {
+    deviceId: string;
+    rotateKey: boolean;
+    masterPassword?: string;
+  }): Promise<ServerRequest[]>;
+  /** Rotation step 2: the staging uploads (`PUT …/records`, ≤ 100 each) and the admin-signed commit, in order. */
+  continueRotation(rotationId: string): Promise<ServerRequest[]>;
+  /** Rotation step 3: after the commit succeeded; switches to the new VK and resets the cursor. */
+  confirmRotation(r: { cursor: number }): Promise<void>;
+  /** Abandons a rotation (any failure before the commit succeeded). Returns the `DELETE` to send. */
+  abortRotation(rotationId: string): Promise<ServerRequest>;
+  /** True while a rotation was started but neither confirmed nor aborted (resume after a crash). */
+  isRotationPending(): Promise<boolean>;
   getDeviceRegistration(): Promise<DeviceRegistration>;
 
   // ---- recovery code (§8.11) ----
@@ -349,6 +375,17 @@ export interface VaultCore {
   requestEnableAutofill(): Promise<boolean>;
 }
 
+// ---------------------------------------------------------------- notices
+
+/**
+ * Things the user must be told about after a sync (spec §7.4 "利用者に通知する").
+ * Delivered with the `onNotice` event and also queued for `drainNotices()`.
+ */
+export type VaultNotice =
+  | { kind: 'server-edit-won'; id: string }
+  | { kind: 'restored-as-new'; id: string; originalId: string }
+  | { kind: 'dropped-local-edits'; count: number };
+
 // ---------------------------------------------------------------- events
 
 /** Event names and payloads emitted by VaultCore. */
@@ -359,6 +396,8 @@ export type VaultCoreEvents = {
   onVaultChanged: Record<string, never>;
   /** After a local save: ask the sync engine to push. */
   onSyncNeeded: Record<string, never>;
+  /** A sync produced something the user must be told (see `VaultNotice`). */
+  onNotice: { notice: VaultNotice };
 };
 
 export type VaultCoreEventName = keyof VaultCoreEvents;

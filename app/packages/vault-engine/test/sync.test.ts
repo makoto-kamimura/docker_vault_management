@@ -71,7 +71,7 @@ describe('sync (§17.1 同期)', () => {
     expect(list).toHaveLength(1);
     expect(list[0]?.id).not.toBe(x.id);
     expect((await b.e.getItem(list[0]?.id as string)).notes).toBe('edited offline');
-    expect(b.e.drainNotices()).toMatchObject([{ kind: 'restored-as-new', originalId: x.id }]);
+    expect(await b.e.drainNotices()).toMatchObject([{ kind: 'restored-as-new', originalId: x.id }]);
     await syncOnce(a.e, s);
     expect(await a.e.listItems()).toHaveLength(1);
   });
@@ -86,7 +86,7 @@ describe('sync (§17.1 同期)', () => {
     await b.e.purgeItem(x.id);
     await syncOnce(b.e, s);
     expect((await b.e.getItem(x.id)).notes).toBe('server edit');
-    expect(b.e.drainNotices()).toMatchObject([{ kind: 'server-edit-won', id: x.id }]);
+    expect(await b.e.drainNotices()).toMatchObject([{ kind: 'server-edit-won', id: x.id }]);
   });
 
   test('tombstones propagate and offline edits are re-sent after reconnect (AC-21)', async () => {
