@@ -1,0 +1,18 @@
+{
+  "description": "Spec 8.3: base64url(SHA-256(signPub || ephPub)), 65-byte uncompressed public keys.",
+  "cases": [
+    {
+      "signPub": "BOf8eiaDtzkITqhMRv3JbXxHxQ5jZkWNYzch-lK0ncAFWbnDa0aeKVZHkJ-8BApPZ61kakV68gm65Xr_rdrfghA",
+      "ephPub": "BPy073FUxWGDP0KMjl_VbQE73CcC3dHEaX71M1XanN1o4fVl9DDkmYj7374DLtuqEvvINTQVCDPWzqcPnh06n8w",
+      "fingerprint": "3Jj2KDaePqr1g8-wI9M2lPffLa84BlZQSGB98U6xfV4"
+    }
+  ],
+  "negative": [
+    {
+      "name": "swapped order",
+      "signPub": "BPy073FUxWGDP0KMjl_VbQE73CcC3dHEaX71M1XanN1o4fVl9DDkmYj7374DLtuqEvvINTQVCDPWzqcPnh06n8w",
+      "ephPub": "BOf8eiaDtzkITqhMRv3JbXxHxQ5jZkWNYzch-lK0ncAFWbnDa0aeKVZHkJ-8BApPZ61kakV68gm65Xr_rdrfghA",
+      "fingerprint": "3Jj2KDaePqr1g8-wI9M2lPffLa84BlZQSGB98U6xfV4"
+    }
+  ]
+}

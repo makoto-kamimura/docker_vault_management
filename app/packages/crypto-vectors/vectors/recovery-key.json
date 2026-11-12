@@ -1,0 +1,81 @@
+{
+  "description": "Spec 5.5. 26 Crockford chars (last 2 bits zero) + 2 check chars from the first 10 bits of SHA-256(SK).",
+  "cases": [
+    {
+      "skHex": "00000000000000000000000000000000",
+      "text": "LV2-0000-0000-0000-0000-0000-0000-006X",
+      "checkChars": "6X"
+    },
+    {
+      "skHex": "ffffffffffffffffffffffffffffffff",
+      "text": "LV2-ZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZ-ZWBB",
+      "checkChars": "BB"
+    },
+    {
+      "skHex": "9d2cf0269139a307e559d35b08a00517",
+      "text": "LV2-KMPF-09MH-76HG-FSAS-TDDG-H805-2W7B",
+      "checkChars": "7B"
+    },
+    {
+      "skHex": "8d780554b90575004364bb077dc74c70",
+      "text": "LV2-HNW0-AN5S-0NTG-0GV4-QC3Q-VHTC-E0NY",
+      "checkChars": "NY"
+    }
+  ],
+  "lenientValid": [
+    {
+      "input": "lv2-kmpf-09mh-76hg-fsas-tddg-h805-2w7b",
+      "skHex": "9d2cf0269139a307e559d35b08a00517"
+    },
+    {
+      "input": "LV2KMPF09MH76HGFSASTDDGH8052W7B",
+      "skHex": "9d2cf0269139a307e559d35b08a00517"
+    },
+    {
+      "input": "LV2 KMPF 09MH 76HG FSAS TDDG H805 2W7B",
+      "skHex": "9d2cf0269139a307e559d35b08a00517"
+    },
+    {
+      "input": "  LV2-KMPF-09MH-76HG-FSAS-TDDG-H805-2W7B  ",
+      "skHex": "9d2cf0269139a307e559d35b08a00517"
+    },
+    {
+      "input": "KMPF09MH76HGFSASTDDGH8052W7B",
+      "skHex": "9d2cf0269139a307e559d35b08a00517"
+    },
+    {
+      "input": "LV2-KMPF-o9MH-76HG-FSAS-TDDG-H8o5-2W7B",
+      "skHex": "9d2cf0269139a307e559d35b08a00517"
+    },
+    {
+      "input": "LV2-KMPF-O9MH-76HG-FSAS-TDDG-H8O5-2W7B",
+      "skHex": "9d2cf0269139a307e559d35b08a00517"
+    }
+  ],
+  "invalid": [
+    {
+      "name": "wrong check characters",
+      "input": "KMPF09MH76HGFSASTDDGH8052W7A"
+    },
+    {
+      "name": "typo in data",
+      "input": "KMPA09MH76HGFSASTDDGH8052W7B"
+    },
+    {
+      "name": "too short",
+      "input": "MPF09MH76HGFSASTDDGH8052W7B"
+    },
+    {
+      "name": "too long",
+      "input": "KMPF09MH76HGFSASTDDGH8052W7B0"
+    },
+    {
+      "name": "letter U not allowed",
+      "input": "UMPF09MH76HGFSASTDDGH8052W7B"
+    },
+    {
+      "name": "empty",
+      "input": ""
+    }
+  ]
+}

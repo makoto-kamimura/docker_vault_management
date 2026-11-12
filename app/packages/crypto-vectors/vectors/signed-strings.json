@@ -1,0 +1,70 @@
+{
+  "description": "UTF-8 text is exactly what is signed (SHA-256 + ECDSA P-256, P1363). Signatures are valid; high-S variants must verify too. Newlines are LF, no trailing newline.",
+  "signerPrivateKeyHex": "a903e6a42076ecdc5541dcf40a7637746e9885e1d316984a94f61566676a72d5",
+  "signerPublicKey": "BNu26WbOdTpbfNoWRl0_nlFJPMxfOxqV17Q8dH1fK95t_uS7tK2CYGiS6ugByZZvjBYmPmHwjUaef5h9FKlmZAA",
+  "items": [
+    {
+      "name": "auth challenge",
+      "text": "lv-auth-v2\n7b2e4c10-9f5d-4e3c-a001-3c4d5e6f7081\n5-nA307cLkeAUdKqKBcfU5g9L-lfZLWMS_JaYWfmwgY",
+      "signature": "9Y8ooHIS2onREbzao_JgjE1HxSSWKZkiQ5ny-LpyY0I1LPajCpC3fSyRy7VjcZq51NpKqMf6Bv9yW3WUo0Ukwg",
+      "input": {
+        "deviceId": "7b2e4c10-9f5d-4e3c-a001-3c4d5e6f7081",
+        "challenge": "5-nA307cLkeAUdKqKBcfU5g9L-lfZLWMS_JaYWfmwgY"
+      },
+      "signatureHighS": "9Y8ooHIS2onREbzao_JgjE1HxSSWKZkiQ5ny-LpyY0LK0wlb9W9Ig9NuNEqcjmVF6AywBN8dl4WBXlUuWR4Ajw",
+      "tamperedSignature": "9I8ooHIS2onREbzao_JgjE1HxSSWKZkiQ5ny-LpyY0I1LPajCpC3fSyRy7VjcZq51NpKqMf6Bv9yW3WUo0Ukwg"
+    },
+    {
+      "name": "unlock request",
+      "text": "lv-unlock-v2\n5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f\n7b2e4c10-9f5d-4e3c-a001-3c4d5e6f7081\nVM45ls6q-odgFZvcZ-0MNg\nBPy073FUxWGDP0KMjl_VbQE73CcC3dHEaX71M1XanN1o4fVl9DDkmYj7374DLtuqEvvINTQVCDPWzqcPnh06n8w\n42\n2026-11-11T09:00:00Z",
+      "signature": "RBdy7moPa685-adhXjbwwEW2tP0QZ1pRnof9GLofJ_J4AMV2YQSrc5sccv0wYdjC0Ndk4ugfddo8qICyihDZ1Q",
+      "input": {
+        "accountId": "5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f",
+        "deviceId": "7b2e4c10-9f5d-4e3c-a001-3c4d5e6f7081",
+        "requestNonce": "VM45ls6q-odgFZvcZ-0MNg",
+        "ephPub": "BPy073FUxWGDP0KMjl_VbQE73CcC3dHEaX71M1XanN1o4fVl9DDkmYj7374DLtuqEvvINTQVCDPWzqcPnh06n8w",
+        "code": "42",
+        "issuedAt": "2026-11-11T09:00:00Z"
+      },
+      "signatureHighS": "RBdy7moPa685-adhXjbwwEW2tP0QZ1pRnof9GLofJ_KH_zqInvtUjWTjjQLPnic87A-Vyr74KKq3EUoQclJLfA",
+      "tamperedSignature": "RRdy7moPa685-adhXjbwwEW2tP0QZ1pRnof9GLofJ_J4AMV2YQSrc5sccv0wYdjC0Ndk4ugfddo8qICyihDZ1Q"
+    },
+    {
+      "name": "admin (with body)",
+      "text": "lv-admin-v2\nPUT\n/v1/keyset\n4m0ruIXsNhHV1UqbMq-_A5FKqIcWFSoyuJkYTf2DXJM\n1794387600\nBy84TcR0EO6WWF6HwhPpTw",
+      "signature": "u9m2ht7SShi4yQB9EPWsjFgv_oCS0iCZgeravsOzQnAZxl9qul2_JPr5SyfXkgmIa7_swjTg7-8DOOLBk7RkSg",
+      "input": {
+        "method": "PUT",
+        "path": "/v1/keyset",
+        "bodyHash": "4m0ruIXsNhHV1UqbMq-_A5FKqIcWFSoyuJkYTf2DXJM",
+        "ts": 1794387600,
+        "nonce": "By84TcR0EO6WWF6HwhPpTw",
+        "bodyUtf8": "{\"keyset\":{\"keysetVersion\":2}}"
+      },
+      "signatureHighS": "u9m2ht7SShi4yQB9EPWsjFgv_oCS0iCZgeravsOzQnDmOaCURaJA3AUGtNgobfZ3UScN63I2rpXwgOgBaK7BBw",
+      "tamperedSignature": "utm2ht7SShi4yQB9EPWsjFgv_oCS0iCZgeravsOzQnAZxl9qul2_JPr5SyfXkgmIa7_swjTg7-8DOOLBk7RkSg"
+    },
+    {
+      "name": "admin (no body)",
+      "text": "lv-admin-v2\nGET\n/v1/devices?x=1\n47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU\n1794387601\nKKEZPzKEpHXQ4KZAyr0QnA",
+      "signature": "ywxMSYqnkhQqP1Q6aMF3LEVqCchTsn1XJFwsYE_XFdRRZOp90xzt5-HbolnNcLqSw2nBpwu2uOWX99ewTySynw",
+      "input": {
+        "method": "GET",
+        "path": "/v1/devices?x=1",
+        "bodyHash": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+        "ts": 1794387601,
+        "nonce": "KKEZPzKEpHXQ4KZAyr0QnA"
+      },
+      "signatureHighS": "ywxMSYqnkhQqP1Q6aMF3LEVqCchTsn1XJFwsYE_XFdSumxWBLOMSGR4kXaYyj0Vs-X05Bptg5Z9bwfMSrT5ysg",
+      "tamperedSignature": "ygxMSYqnkhQqP1Q6aMF3LEVqCchTsn1XJFwsYE_XFdRRZOp90xzt5-HbolnNcLqSw2nBpwu2uOWX99ewTySynw"
+    }
+  ],
+  "adminHeader": {
+    "value": "deviceId=7b2e4c10-9f5d-4e3c-a001-3c4d5e6f7081, ts=1794387600, nonce=By84TcR0EO6WWF6HwhPpTw, sig=u9m2ht7SShi4yQB9EPWsjFgv_oCS0iCZgeravsOzQnAZxl9qul2_JPr5SyfXkgmIa7_swjTg7-8DOOLBk7RkSg",
+    "request": {
+      "method": "PUT",
+      "path": "/v1/keyset",
+      "bodyUtf8": "{\"keyset\":{\"keysetVersion\":2}}"
+    }
+  }
+}
