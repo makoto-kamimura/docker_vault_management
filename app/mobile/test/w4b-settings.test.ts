@@ -31,12 +31,7 @@ import {
   severity,
 } from '../src/features/security-log/flows';
 import { describeActionError, isClockSkew, isRetryable } from '../src/features/settings/errors';
-import {
-  patchSettings,
-  readBiometricsEnabled,
-  reenrollBiometrics,
-  setBiometrics,
-} from '../src/features/settings/flows';
+import { patchSettings, reenrollBiometrics, setBiometrics } from '../src/features/settings/flows';
 import { changeServerFlow, ServerChangeError } from '../src/features/settings/serverFlows';
 import { createMemoryFlagStore, FLAGS } from '../src/lib/flagStore';
 import { formatSpan, relativeTime } from '../src/lib/format';
@@ -63,18 +58,22 @@ describe('settings', () => {
     ).toBe(300);
     expect((await core.getSettings()).clipboardClearSec).toBeNull();
   });
-  it('tracks the biometrics flag and the invalidated re-setup path (FR-13)', async () => {
-    const { core, store } = setup();
-    expect(await readBiometricsEnabled(core, store)).toBe(true); // falls back to availability
-    expect(await setBiometrics(core, store, false)).toEqual({ ok: true });
-    expect(await readBiometricsEnabled(core, store)).toBe(false);
+  it('reads biometricsEnabled from settings and handles the invalidated re-setup path (FR-13)', async () => {
+    const { core } = setup();
+    expect((await core.getSettings()).biometricsEnabled).toBe(false);
+    expect(await setBiometrics(core, true)).toEqual({ ok: true });
+    expect((await core.getSettings()).biometricsEnabled).toBe(true);
+    await core.updateSettings({ biometricsEnabled: false });
+    expect((await core.getSettings()).biometricsEnabled).toBe(true); // read-only via updateSettings
+    expect(await setBiometrics(core, false)).toEqual({ ok: true });
+    expect((await core.getSettings()).biometricsEnabled).toBe(false);
     core.enableBiometrics = async () => {
       throw new VaultCoreError('E_BIOMETRY_INVALIDATED');
     };
-    expect(await setBiometrics(core, store, true)).toEqual({ ok: false, reason: 'invalidated' });
+    expect(await setBiometrics(core, true)).toEqual({ ok: false, reason: 'invalidated' });
     const fresh = new FakeVaultCore({ lockState: 'unlocked' });
-    expect(await reenrollBiometrics(fresh, store)).toEqual({ ok: true });
-    expect(await store.get(FLAGS.biometricsOn)).toBe(true);
+    expect(await reenrollBiometrics(fresh)).toEqual({ ok: true });
+    expect((await fresh.getSettings()).biometricsEnabled).toBe(true);
   });
 });
 
@@ -257,6 +256,7 @@ describe('security log', () => {
         type: 'extension',
         platform: 'chrome',
         addedAt: '',
+        addedVia: 'pairing',
         revokedAt: null,
         isThisDevice: false,
       },

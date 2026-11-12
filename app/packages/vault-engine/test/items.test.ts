@@ -44,6 +44,17 @@ describe('items', () => {
     await expect(e.revealHistoricPassword(a.id, 0)).rejects.toMatchObject({ code: 'E_NOT_FOUND' });
   });
 
+  test('copyText uses the clipboard dependency with the TTL setting; biometricsEnabled and addedVia are exposed', async () => {
+    const { e, p } = await fresh();
+    const r = await e.copyText('Gen#3rated');
+    expect(p.deps.clipboard.history.at(-1)).toEqual({ text: 'Gen#3rated', ttlSec: 60 });
+    expect(r.clearsAt).toBe(new Date(p.clock.now().getTime() + 60_000).toISOString());
+    await e.updateSettings({ clipboardClearSec: null });
+    expect((await e.copyText('x')).clearsAt).toBeNull();
+    expect((await e.getSettings()).biometricsEnabled).toBe(false);
+    expect((await e.listDevices()).map((d) => d.addedVia)).toContain('setup');
+  });
+
   test('copy uses the clipboard dependency and the TTL setting; usage history is local', async () => {
     const { e, p } = await fresh();
     const a = await e.saveItem(item('Mail'));

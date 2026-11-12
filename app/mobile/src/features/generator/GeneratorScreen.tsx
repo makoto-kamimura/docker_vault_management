@@ -1,5 +1,5 @@
 import { GENERATOR_MAX_LENGTH, GENERATOR_MIN_LENGTH } from '@localvault/core';
-import { RefreshCw } from 'lucide-react-native';
+import { Copy, RefreshCw } from 'lucide-react-native';
 import { View } from 'react-native';
 import { Button, Card, Screen, Slider, StrengthMeter, SwitchRow, Text } from '../../components';
 import { t } from '../../i18n';
@@ -35,6 +35,14 @@ export function GeneratorScreen() {
             {g.value}
           </Text>
           <StrengthMeter password={g.value} />
+          <Button
+            variant="secondary"
+            icon={Copy}
+            label={t('gen.copy')}
+            testID="gen-copy"
+            onPress={() => void g.copy()}
+            disabled={g.value === ''}
+          />
           <Button
             variant="secondary"
             icon={RefreshCw}

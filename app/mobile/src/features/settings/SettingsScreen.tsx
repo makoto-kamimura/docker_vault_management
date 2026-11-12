@@ -22,13 +22,12 @@ import { useCallback, useState } from 'react';
 import { Platform } from 'react-native';
 import { Badge, Banner, ListRow, Screen, Section, SwitchRow, Text } from '../../components';
 import { t } from '../../i18n';
-import { getFlagStore } from '../../lib/flagStore';
 import { formatDate } from '../../lib/format';
 import { haptics } from '../../lib/haptics';
 import { nav } from '../../lib/nav';
 import { useSyncStore } from '../../state/syncStore';
 import { useSession } from '../session/SessionProvider';
-import { patchSettings, readBiometricsEnabled, reenrollBiometrics, setBiometrics } from './flows';
+import { patchSettings, reenrollBiometrics, setBiometrics } from './flows';
 import { OptionSheet } from './OptionSheet';
 import { AUTO_LOCK_OPTIONS, CLIPBOARD_OPTIONS, labelFor, PC_SESSION_OPTIONS } from './options';
 import { useAction } from './useAction';
@@ -36,7 +35,6 @@ import { useAction } from './useAction';
 type Loaded = {
   settings: Settings;
   bio: { available: boolean; kind: string };
-  bioOn: boolean;
   autofill: { supported: boolean; enabled: boolean };
   lastExportAt: string | null;
   serverUrl: string;
@@ -57,11 +55,9 @@ export function SettingsScreen() {
 
   const load = useCallback(() => {
     (async () => {
-      const store = getFlagStore();
-      const [settings, bio, bioOn, autofill, backup, account] = await Promise.all([
+      const [settings, bio, autofill, backup, account] = await Promise.all([
         core.getSettings(),
         core.getBiometricAvailability(),
-        readBiometricsEnabled(core, store),
         core.getAutofillStatus().catch(() => ({ supported: false, enabled: false })),
         core.getBackupInfo().catch(() => ({ lastExportAt: null })),
         core.getAccountInfo(),
@@ -81,7 +77,6 @@ export function SettingsScreen() {
       setData({
         settings,
         bio,
-        bioOn,
         autofill,
         lastExportAt: backup.lastExportAt,
         serverUrl: account.serverUrl,
@@ -109,12 +104,12 @@ export function SettingsScreen() {
 
   const toggleBio = (on: boolean) =>
     act.run(async () => {
-      const r = await setBiometrics(core, getFlagStore(), on);
+      const r = await setBiometrics(core, on);
       if (r.ok) {
-        setData((d) => (d ? { ...d, bioOn: on } : d));
+        setData((d) => (d ? { ...d, settings: { ...d.settings, biometricsEnabled: on } } : d));
         setBioInvalid(false);
       } else if (r.reason === 'invalidated') {
-        setData((d) => (d ? { ...d, bioOn: false } : d));
+        setData((d) => (d ? { ...d, settings: { ...d.settings, biometricsEnabled: false } } : d));
         setBioInvalid(true);
         haptics.warning();
       }
@@ -122,9 +117,9 @@ export function SettingsScreen() {
 
   const reenroll = () =>
     act.run(async () => {
-      const r = await reenrollBiometrics(core, getFlagStore());
+      const r = await reenrollBiometrics(core);
       setBioInvalid(!r.ok && r.reason === 'invalidated');
-      setData((d) => (d ? { ...d, bioOn: r.ok } : d));
+      setData((d) => (d ? { ...d, settings: { ...d.settings, biometricsEnabled: r.ok } } : d));
       if (r.ok) haptics.success();
     });
 
@@ -189,7 +184,7 @@ export function SettingsScreen() {
             testID="set-bio"
             title={t('set.bio', { kind: bioLabel })}
             subtitle={t('set.bio.hint')}
-            value={data.bioOn}
+            value={data.settings.biometricsEnabled}
             onValueChange={toggleBio}
           />
         )}

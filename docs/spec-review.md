@@ -146,3 +146,13 @@ FR-12 のカウンタは本体アプリとオートフィル拡張／認証 Acti
 | `buildRecoverRequest` は直前の `deriveAuthKey` に依存する | `accountId` を引数に持たないため。呼び出し順を守る |
 
 自動ロックのための前面・背面の通知（`onForeground` / `onBackground`）は契約に入れない。ネイティブ実装はアプリのライフサイクルを自分で監視する（§5.8）。開発用コアだけが、アクセス層から呼ばれる。
+
+### W4c で閉じた残りの隙間
+
+| 追加・変更 | 理由 |
+|---|---|
+| `Settings.biometricsEnabled: boolean` | 生体認証が有効かを画面が知る手段がなかった。`updateSettings` では変更できず（読み取り専用）、変更は従来どおり `enableBiometrics` / `disableBiometrics`。画面側の `flagStore` による代用は廃止 |
+| `DeviceInfo.addedVia` | 信頼リストのレコード（§6.1）が持つ追加経路を一覧に出すため。省略可能の回避策は廃止 |
+| `copyText(text)` | 生成したパスワードなど任意の文字列を `copy`（§5.10）と同じクリップボード保護でコピーするため。`clearsAt` を返す |
+
+**PC の OS はデフォルト名に使わない（決定）。** サーバーとプロトコルは変更しない。端末側で `platform` から作る既定名「Chrome（PC）」を維持し、承認時の名前欄で利用者が編集できる。OS をペアリング情報に載せる案は、情報量に対してプロトコルの変更が大きいため見送る。

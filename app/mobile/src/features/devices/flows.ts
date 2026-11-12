@@ -9,7 +9,7 @@ import {
 import type { ApiClient } from '../../api';
 import { FLAGS, type FlagStore } from '../../lib/flagStore';
 
-export type DeviceRow = DeviceInfo & { lastSeenAt: string | null; addedVia?: string };
+export type DeviceRow = DeviceInfo & { lastSeenAt: string | null };
 
 export type DeviceLists = { active: DeviceRow[]; revoked: DeviceRow[]; serverReachable: boolean };
 
@@ -26,7 +26,6 @@ export async function loadDevices(core: VaultCore, api: ApiClient): Promise<Devi
   const rows: DeviceRow[] = local.map((d) => ({
     ...d,
     lastSeenAt: seen.get(d.deviceId) ?? null,
-    addedVia: (d as DeviceInfo & { addedVia?: string }).addedVia,
   }));
   const byRecent = (a: DeviceRow, b: DeviceRow) => Date.parse(b.addedAt) - Date.parse(a.addedAt);
   return {
@@ -49,7 +48,7 @@ export function isLastApprover(devices: DeviceInfo[]): boolean {
 
 const BROWSER_LABEL: Record<string, string> = { chrome: 'Chrome', edge: 'Edge', brave: 'Brave' };
 
-/** The PC's OS is not part of the pairing record, so the default name is "Chrome（PC）". */
+/** The PC's OS is not part of the pairing record (decision: no protocol change), so the default is "Chrome（PC）"; the user can edit it. */
 export function defaultDeviceName(platform: string): string {
   return `${BROWSER_LABEL[platform] ?? platform}（PC）`;
 }

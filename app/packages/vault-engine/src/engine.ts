@@ -1432,6 +1432,11 @@ class VaultEngine implements VaultCore, EngineExtras {
     };
   }
 
+  async copyText(text: string): Promise<{ clearsAt: string | null }> {
+    this.#unlocked();
+    return this.#toClipboard(text);
+  }
+
   async copy(id: string, field: CopyField): Promise<{ clearsAt: string | null }> {
     const p = this.#loginOf(id);
     const r = await this.#toClipboard(field === 'password' ? p.data.password : p.data.username);
@@ -1736,6 +1741,7 @@ class VaultEngine implements VaultCore, EngineExtras {
       clipboardClearSec: local.clipboardClearSec,
       showUsernameBeforeAuth: local.showUsernameBeforeAuth,
       pcSessionMaxSec: local.pcSessionMaxSec,
+      biometricsEnabled: local.biometricsEnabled,
     };
   }
 
@@ -1802,6 +1808,7 @@ class VaultEngine implements VaultCore, EngineExtras {
       type: d.type,
       platform: d.platform,
       addedAt: d.addedAt,
+      addedVia: d.addedVia,
       revokedAt: d.revokedAt,
       isThisDevice: d.deviceId === local.deviceId,
     }));

@@ -4,6 +4,7 @@ import { t } from '../../i18n';
 import { nav } from '../../lib/nav';
 import { useToastStore } from '../../state/toastStore';
 import { describeError } from '../errors/messages';
+import { copiedMessage } from '../items/model';
 import { useSession } from '../session/SessionProvider';
 import { useGeneratorHandoff } from './generatorStore';
 import { canDisable, clampLength, type classKeys } from './options';
@@ -39,6 +40,15 @@ export function useGenerator() {
   const toggleAmbiguous = () =>
     setOptions((o) => ({ ...o, excludeAmbiguous: !o.excludeAmbiguous }));
 
+  const copy = async () => {
+    try {
+      const r = await core.copyText(value);
+      push('success', copiedMessage(r.clearsAt, Date.now()));
+    } catch (e) {
+      push('error', describeError(e) || t('gen.failed'));
+    }
+  };
+
   const use = () => {
     offer(value);
     nav.back();
@@ -52,5 +62,6 @@ export function useGenerator() {
     toggleAmbiguous,
     regenerate: () => regenerate(options),
     use,
+    copy,
   };
 }

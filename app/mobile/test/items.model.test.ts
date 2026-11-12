@@ -5,7 +5,6 @@ import { formSchema, toItemInput, validateForm } from '../src/features/items/for
 import {
   buildSections,
   copiedMessage,
-  exportReminder,
   flattenSections,
   isHighlighted,
   noticeMessage,
@@ -106,13 +105,6 @@ describe('notices, copy toast, trash, export reminder', () => {
       item({ id: '3', title: 'c' }),
     ]);
     expect(r.map((i) => i.id)).toEqual(['2', '1']);
-  });
-
-  it('export reminder: never, stale, fresh', () => {
-    const now = Date.parse('2026-06-01T00:00:00Z');
-    expect(exportReminder(null, now)).toBe('items.banner.export');
-    expect(exportReminder('2026-01-01T00:00:00Z', now)).toBe('items.banner.exportOld');
-    expect(exportReminder('2026-05-25T00:00:00Z', now)).toBeNull();
   });
 
   it('opens only http(s) URLs', () => {

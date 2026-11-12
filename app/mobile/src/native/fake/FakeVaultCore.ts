@@ -74,6 +74,7 @@ export class FakeVaultCore implements VaultCore {
     clipboardClearSec: 30,
     showUsernameBeforeAuth: false,
     pcSessionMaxSec: 3600,
+    biometricsEnabled: false,
   };
   private listeners: { [E in VaultCoreEventName]?: Set<Listener<E>> } = {};
   private readonly now: () => number;
@@ -141,9 +142,11 @@ export class FakeVaultCore implements VaultCore {
   async enableBiometrics() {
     if (this.biometricKind === 'none') throw new VaultCoreError('E_BIOMETRY_UNAVAILABLE');
     this.biometricsOn = true;
+    this.settings = { ...this.settings, biometricsEnabled: true };
   }
   async disableBiometrics() {
     this.biometricsOn = false;
+    this.settings = { ...this.settings, biometricsEnabled: false };
   }
   async unlockWithBiometrics() {
     if (this.biometricFails) throw this.biometricFails;
@@ -425,6 +428,13 @@ export class FakeVaultCore implements VaultCore {
     const sec = this.settings.clipboardClearSec;
     return { clearsAt: sec === null ? null : new Date(this.now() + sec * 1000).toISOString() };
   }
+  /** Test hook: every copyText, in order. */
+  copiedTexts: string[] = [];
+  async copyText(text: string): Promise<{ clearsAt: string | null }> {
+    this.copiedTexts.push(text);
+    const sec = this.settings.clipboardClearSec;
+    return { clearsAt: sec === null ? null : new Date(this.now() + sec * 1000).toISOString() };
+  }
   async generatePassword(o: { length: number }): Promise<string> {
     return 'Ab3$'.repeat(Math.ceil(o.length / 4)).slice(0, o.length);
   }
@@ -619,7 +629,8 @@ export class FakeVaultCore implements VaultCore {
     return this.settings;
   }
   async updateSettings(patch: Partial<Settings>) {
-    this.settings = { ...this.settings, ...patch };
+    const { biometricsEnabled: _ignored, ...rest } = patch;
+    this.settings = { ...this.settings, ...rest };
   }
   async getAutofillStatus() {
     return { supported: true, enabled: false, textInsertionSupported: true };

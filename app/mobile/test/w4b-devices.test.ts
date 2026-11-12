@@ -25,6 +25,7 @@ const device = (o: Partial<import('@localvault/core').DeviceInfo> = {}) => ({
   type: 'extension' as const,
   platform: 'chrome',
   addedAt: '2026-11-01T00:00:00Z',
+  addedVia: 'pairing' as const,
   revokedAt: null,
   isThisDevice: false,
   ...o,

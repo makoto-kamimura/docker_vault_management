@@ -88,6 +88,8 @@ export type Settings = {
   showUsernameBeforeAuth: boolean;
   /** Stored in the meta record and therefore synced. */
   pcSessionMaxSec: PcSessionMaxSec;
+  /** Read-only through updateSettings; change via enableBiometrics / disableBiometrics. */
+  biometricsEnabled: boolean;
 };
 
 export type DeviceInfo = {
@@ -96,6 +98,8 @@ export type DeviceInfo = {
   type: 'mobile' | 'extension';
   platform: string;
   addedAt: string;
+  /** From the trust-list record (spec §6.1). */
+  addedVia: 'setup' | 'pairing' | 'recovery-key' | 'recovery-code';
   revokedAt: string | null;
   isThisDevice: boolean;
 };
@@ -243,6 +247,8 @@ export interface VaultCore {
 
   // ---- copy and generate ----
   copy(id: string, field: CopyField): Promise<{ clearsAt: string | null }>;
+  /** Copies arbitrary text (e.g. a generated password) with the same protections as `copy` (§5.10). */
+  copyText(text: string): Promise<{ clearsAt: string | null }>;
   generatePassword(options: GeneratorOptions): Promise<string>;
 
   // ---- sync (JS only carries ciphertext) ----

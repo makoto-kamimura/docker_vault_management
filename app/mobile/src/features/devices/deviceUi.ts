@@ -1,3 +1,4 @@
+import type { DeviceInfo } from '@localvault/core';
 import { Globe, Monitor, Smartphone } from 'lucide-react-native';
 import type { MessageKey } from '../../i18n';
 import { t } from '../../i18n';
@@ -7,7 +8,7 @@ import type { DeviceRow } from './flows';
 export const deviceIcon = (d: Pick<DeviceRow, 'type' | 'platform'>) =>
   d.type === 'mobile' ? Smartphone : d.platform === 'chrome' ? Globe : Monitor;
 
-const VIA: Record<string, MessageKey> = {
+const VIA: Record<DeviceInfo['addedVia'], MessageKey> = {
   'recovery-key': 'dev.via.recoveryKey',
   'recovery-code': 'dev.via.recoveryCode',
   pairing: 'dev.via.pairing',
@@ -24,7 +25,6 @@ export function deviceSubtitle(d: DeviceRow): string {
   } else {
     parts.push(t('dev.revokedOn', { date: formatDate(d.revokedAt) }));
   }
-  const via = d.addedVia ? VIA[d.addedVia] : undefined;
-  if (via) parts.push(t(via));
+  parts.push(t(VIA[d.addedVia]));
   return parts.join(' ・ ');
 }

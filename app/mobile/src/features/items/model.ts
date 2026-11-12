@@ -1,7 +1,7 @@
 // Pure list logic (no React Native imports): search, sort, sections, notices, trash arithmetic.
 import { type ItemSummary, matchesQuery, type VaultNotice } from '@localvault/core';
 import { TTL_SEC } from '@localvault/protocol';
-import { type MessageKey, t } from '../../i18n';
+import { t } from '../../i18n';
 
 export type SortMode = 'recent' | 'name';
 
@@ -89,12 +89,6 @@ export function trashDaysLeft(trashedAt: string, now: number): number {
 export function trashLabel(trashedAt: string, now: number): string {
   const days = trashDaysLeft(trashedAt, now);
   return days === 0 ? t('trash.today') : t('trash.daysLeft', { days });
-}
-
-/** FR-53 export reminder: never exported, or the last export is older than 30 days. */
-export function exportReminder(lastExportAt: string | null, now: number): MessageKey | null {
-  if (lastExportAt === null) return 'items.banner.export';
-  return now - Date.parse(lastExportAt) > 30 * 86_400_000 ? 'items.banner.exportOld' : null;
 }
 
 /** FR-26: only http(s) links are opened; a bare host gets https://. */
