@@ -39,7 +39,7 @@ platform/
    ```
 6. 最初の招待コードを発行する。
    ```sh
-   platform/scripts/invite.sh prod invite create --expires-in 7d
+   platform/scripts/invite.sh prod create --expires-in 7d
    ```
 
 ## 開発

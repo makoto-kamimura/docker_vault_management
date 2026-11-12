@@ -20,6 +20,8 @@ export const ERROR_STATUS = {
   E_TOO_LARGE: 413,
   E_RATE_LIMITED: 429,
   E_RC_FROZEN: 423,
+  /** Unexpected server failure. Carries no detail; clients treat it as retryable. */
+  E_INTERNAL: 500,
 } as const;
 
 export type ErrorCode = keyof typeof ERROR_STATUS;
