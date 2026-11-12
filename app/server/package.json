@@ -7,7 +7,9 @@
     "dev": "tsx watch --env-file-if-exists=.env src/server.ts",
     "build": "tsup",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:e2e": "vitest run -c e2e/vitest.config.ts",
+    "typecheck:e2e": "tsc -p e2e/tsconfig.json --noEmit"
   },
   "dependencies": {
     "@hono/node-server": "^2.1.6",
@@ -20,6 +22,8 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@localvault/core": "workspace:*",
+    "@localvault/vault-engine": "workspace:*",
     "@testcontainers/postgresql": "^12.2.1",
     "@types/node": "^24.19.2",
     "@types/pg": "^8.23.1",

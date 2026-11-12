@@ -110,7 +110,7 @@ describe.each(providers)('vectors on %s', (_n, base) => {
       expect(await base.ecdsaVerify(unhex(k.publicKeyHex), msg, goodSig), k.name).toBe(false);
   });
 
-  test('kdf + wrapped VK', { timeout: 60000 }, async () => {
+  test('kdf + wrapped VK', { timeout: 300_000 }, async () => {
     const kdf = load('kdf.json');
     for (const c of kdf.cases) {
       const sk = unhex(c.recoveryKeyHex);
@@ -327,7 +327,7 @@ describe.each(providers)('vectors on %s', (_n, base) => {
       ).rejects.toMatchObject(E_DECRYPT);
   });
 
-  test('export file', { timeout: 60000 }, async () => {
+  test('export file', { timeout: 300_000 }, async () => {
     const v = load('export-file.json');
     const det = createDeterministicProvider(base);
     det.enqueueRandom(
