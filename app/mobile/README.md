@@ -1,8 +1,9 @@
 # @localvault/mobile
 
 LocalVault 本体アプリ（Expo SDK 58 / React Native 0.88、New Architecture、expo-router、TypeScript strict）。
-この版（W3c）は土台です：デザインシステム、ナビゲーションとガード、i18n、状態、API クライアント、同期エンジン、
-VaultCore へのアクセス層、初期設定とロック解除の画面まで。項目・端末・設定・復旧コードの画面は次のウェーブで追加します。
+仕様 §14 の全画面（初期設定、ロック解除、項目、パスワード生成、ゴミ箱、PC の承認、端末、設定、アカウント、
+復旧コード、バックアップ、CSV 取り込み、セキュリティ履歴、ヘルプ）を実装済みです。
+VaultCore のネイティブ実装（Swift / Kotlin）は次の段階で作ります。それまでは開発用コア（下記）で動かします。
 
 ## 動かし方
 
@@ -24,7 +25,7 @@ Android のビルドは対象外です（JDK / Android SDK 前提）。ネイテ
 | 変数                         | 意味                                                                                                       |
 | ---------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | `EXPO_PUBLIC_LV_FAKE_CORE=1` | メモリ上の `FakeVaultCore` と簡易ダミーサーバーを使う。画面確認用（暗号は行わない）                        |
-| `EXPO_PUBLIC_LV_DEV_CORE=1`  | 開発用 VaultCore（`native/dev/createDevVaultCore.ts`、次のウェーブで `@localvault/vault-engine` につなぐ） |
+| `EXPO_PUBLIC_LV_DEV_CORE=1`  | 開発用 VaultCore（`native/dev/createDevVaultCore.ts`。`@localvault/vault-engine` を noble 実装で動かす。鍵の保管は安全ではない開発用の模擬） |
 
 `VaultCore` の解決順（`src/native/VaultCore.ts`）：ネイティブモジュール `LocalVaultCore` → 上記フラグ（`__DEV__` のみ）→ エラー。
 `http://localhost` などは開発ビルド（`__DEV__`）に限り受け付けます（§5.11 / G11）。本番は https のみ。
@@ -49,12 +50,13 @@ src/native/              VaultCore のアクセス点、fake/、dev/、privacy.t
 test/                    vitest（API、同期、ガード、フロー、リカバリーキー入力など）
 ```
 
-## 次のウェーブでの追加場所
+## 画面の置き場所
 
-- 項目の画面：`src/app/(app)/item/...`、`generator.tsx`、`trash.tsx`。ロジックは `src/features/items/`。
-- 端末・PC の承認：`src/app/(app)/devices/...`、`src/app/(app)/approve/[requestId].tsx`（ガードはロック中でも通す）、
-  `src/app/(app)/recovery-claim/[id].tsx`。ロジックは `src/features/devices/`。
-- 設定：`src/app/(app)/settings/...`、ロジックは `src/features/settings/`。
-- 一覧：`src/features/home/HomeScreen.tsx` を置き換える。同期状態は `useSyncStore`、同期は `useSession().engine`。
-- 文言は必ず `src/i18n/ja.ts` に追加し、`t()` で使う。
+- 項目：`src/app/(app)/item/...`、`generator.tsx`、`trash.tsx`、一覧は `src/app/(app)/index.tsx`。ロジックは `src/features/{items,generator,trash}/`。
+- PC の承認と復元要求：`src/app/(app)/approve/[requestId].tsx`（ガードはロック中でも通す）、`recovery-claim/[id].tsx`。ロジックは `src/features/approvals/`。
+- 端末：`src/app/(app)/devices/...`、ロジックは `src/features/devices/`（鍵の更新を伴う解除と再開を含む）。
+- 設定：`src/app/(app)/settings/...`、ロジックは `src/features/{settings,account,recovery-code,backup,security-log,help}/`。
+- 同期状態は `useSyncStore`、同期は `useSession().engine`。
+- 文言は必ず `src/i18n/` の辞書に追加し、`t()` で使う。
+- 開発用コアや偽のコアを読み込む条件は、`src/native/VaultCore.ts` の `__DEV__ && process.env.…` のリテラル比較のままにする。定数に置き換えると本番バンドルに混入する。
 - 通知タップのディープリンクは `pushTargetRoute()`（`@localvault/protocol`）で解決する。

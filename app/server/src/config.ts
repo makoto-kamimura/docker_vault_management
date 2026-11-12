@@ -94,7 +94,10 @@ const envSchema = z.object({
 
 /** Resolve `NAME` or `NAME_FILE` into a plain env map. Reports names only, never values. */
 function resolveEnv(env: Env, readFile: ReadFile, problems: string[]): Env {
-  const out: Env = { ...env };
+  // An empty value means "not set": Compose writes `${VAR:-}` as an empty string, and an optional
+  // secret file may be an empty placeholder.
+  const out: Env = {};
+  for (const [k, v] of Object.entries(env)) if (v !== undefined && v !== '') out[k] = v;
   for (const name of FILE_CAPABLE) {
     const file = env[`${name}_FILE`];
     if (file === undefined || file === '') continue;
@@ -103,7 +106,8 @@ function resolveEnv(env: Env, readFile: ReadFile, problems: string[]): Env {
       continue;
     }
     try {
-      out[name] = readFile(file).replace(/\r?\n$/, '');
+      const value = readFile(file).replace(/\r?\n$/, '');
+      if (value !== '') out[name] = value;
     } catch {
       problems.push(`${name}_FILE: cannot read the file`);
     }

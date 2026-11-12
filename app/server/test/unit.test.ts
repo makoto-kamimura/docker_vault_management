@@ -43,6 +43,22 @@ describe('config', () => {
     expect(msg).not.toContain('weird');
     expect(msg).not.toContain('pw@db');
   });
+  test('empty values and empty secret files count as unset (compose default-empty vars)', () => {
+    const c = loadConfig(
+      {
+        ...goodEnv,
+        APNS_KEY_ID: '',
+        APNS_TEAM_ID: '',
+        APNS_KEY_P8_FILE: '/s/empty',
+        APNS_TOPIC: '',
+        FCM_SERVICE_ACCOUNT_JSON_FILE: '/s/empty',
+        LOG_LEVEL: '',
+      },
+      () => '',
+    );
+    expect(c.apns).toBeNull();
+    expect(c.fcm).toBeNull();
+  });
   test('_FILE variants', () => {
     const files: Record<string, string> = { '/s/tok': `${'c'.repeat(40)}\n` };
     const c = loadConfig(

@@ -82,6 +82,6 @@ docker compose -f platform/docker/compose.yml --env-file platform/env/.env up -d
 
 ## ログに残るもの・残らないもの
 
-- Caddy のアクセスログ（stdout）は、時刻・クライアント IP・メソッド・パス・ステータス・所要時間のみを記録します。リクエストヘッダー（Authorization、X-LV-Admin、X-LV-AuthKey など）、ボディ、クエリ文字列、レスポンスヘッダーは記録しません（spec §5.12）。
+- Caddy のアクセスログ（stdout）は、時刻・メソッド・パス・ステータス・所要時間のみを記録します。クライアント IP も記録しません。コンテナのログは 10 MB × 3 世代までに制限しています。リクエストヘッダー（Authorization、X-LV-Admin、X-LV-AuthKey など）、ボディ、クエリ文字列、レスポンスヘッダーは記録しません（spec §5.12）。
 - app のログに秘密値や平文のデータを出さないのはサーバー側の責務です（`LOG_LEVEL` で詳細度を調整）。
 - 保存される秘密は `platform/secrets/` のファイル（権限 600）だけです。Docker の secret として `/run/secrets/` に渡され、環境変数には載りません（`.env` にはパスワード類を書かない）。
