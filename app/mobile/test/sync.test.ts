@@ -74,6 +74,7 @@ describe('syncOnce', () => {
     await syncOnce({ core, api });
     expect(calls.map((c) => new URL(c.url).searchParams.get('since'))).toEqual(['0', '5']);
     expect(core.pulled.map((p) => p.cursor)).toEqual([5, 9]);
+    expect(core.pulled.map((p) => p.hasMore)).toEqual([true, false]);
     expect(core.pulled[0]?.keyset).toEqual(ks);
     expect(core.pulled.every((p) => !p.fullResync)).toBe(true);
   });

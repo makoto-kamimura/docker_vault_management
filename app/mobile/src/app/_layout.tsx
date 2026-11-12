@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Text, ToastProvider } from '../components';
 import { fakeStartRoute } from '../env';
+import { NotificationRouter } from '../features/approvals/NotificationRouter';
 import { RouteGuard } from '../features/navigation/RouteGuard';
 import { SessionProvider } from '../features/session/SessionProvider';
 import { nav } from '../lib/nav';
@@ -49,6 +50,7 @@ function Navigator() {
     <>
       <StatusBar style={t.name === 'dark' ? 'light' : 'dark'} />
       <RouteGuard />
+      <NotificationRouter />
       {lockState === 'unknown' ? (
         <Splash />
       ) : (

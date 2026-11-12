@@ -47,6 +47,17 @@ export function createFakeFetch(
       case 'PUT /v1/devices/self/push-token':
       case 'PUT /v1/keyset':
         return json(204, undefined);
+      // W4b: screens that list server state (empty answers; tests use their own handlers).
+      case 'GET /v1/devices':
+        return json(200, { devices: [] });
+      case 'GET /v1/unlock-requests/pending':
+        return json(200, { requests: [] });
+      case 'GET /v1/recovery-claims/pending':
+        return json(200, { claims: [] });
+      case 'GET /v1/recovery-code':
+        return json(200, { enabled: false });
+      case 'GET /v1/audit-events':
+        return json(200, { events: [], hasMore: false });
       default:
         return json(404, { error: { code: 'E_NOT_FOUND', message: 'fake server' } });
     }

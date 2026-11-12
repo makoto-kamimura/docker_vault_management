@@ -1,3 +1,3 @@
-import { HomeScreen } from '../../features/home/HomeScreen';
+import { ListScreen } from '../../features/items/ListScreen';
 
-export default HomeScreen;
+export default ListScreen;

@@ -9,13 +9,15 @@
     "android": "expo run:android",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "doctor": "expo-doctor"
+    "doctor": "expo-doctor",
+    "licenses": "node scripts/generate-licenses.mjs"
   },
   "dependencies": {
     "@expo/metro-runtime": "~58.0.0",
     "@localvault/core": "workspace:*",
     "@localvault/design-tokens": "workspace:*",
     "@localvault/protocol": "workspace:*",
+    "@localvault/vault-engine": "workspace:*",
     "@shopify/flash-list": "2.3.2",
     "expo": "~58.0.0",
     "expo-build-properties": "~58.0.0",

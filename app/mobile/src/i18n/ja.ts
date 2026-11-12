@@ -1,3 +1,5 @@
+import { jaItems } from './ja.items';
+import { jaSettings } from './ja.settings';
 // All user-facing strings (NFR-09). Flat, typed keys; `{name}` placeholders are interpolated by t().
 export const ja = {
   // ---- common
@@ -307,6 +309,8 @@ export const ja = {
   'qr.permission.denied': 'カメラが許可されていません。設定アプリから許可してください。',
   'qr.hint': '枠の中に QR コードを合わせてください',
   'qr.loading': 'カメラを準備しています',
+  ...jaItems,
+  ...jaSettings,
 } as const;
 
 export type MessageKey = keyof typeof ja;

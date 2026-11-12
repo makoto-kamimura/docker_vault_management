@@ -5,7 +5,7 @@
 //   4. otherwise: a clear error.
 import type { VaultCore, VaultCoreEventName, VaultCoreEvents } from '@localvault/core';
 import { requireOptionalNativeModule } from 'expo';
-import { devCoreEnabled, fakeCoreEnabled, fakeStartLocked } from '../env';
+import { fakeStartLocked } from '../env';
 
 export type VaultCoreListener<E extends VaultCoreEventName> = (payload: VaultCoreEvents[E]) => void;
 
@@ -40,7 +40,9 @@ async function resolveHandle(): Promise<VaultCoreHandle> {
       },
     };
   }
-  if (fakeCoreEnabled) {
+  // Literal `__DEV__ && process.env...` test so Metro removes the fake (and its demo password)
+  // from production bundles; the `fakeCoreEnabled` constant is not folded across modules.
+  if (__DEV__ && process.env.EXPO_PUBLIC_LV_FAKE_CORE === '1') {
     const [{ FakeVaultCore }, { createFakeFetch }] = await Promise.all([
       import('./fake/FakeVaultCore'),
       import('./fake/fakeFetch'),
@@ -57,7 +59,9 @@ async function resolveHandle(): Promise<VaultCoreHandle> {
       fetch: createFakeFetch(),
     };
   }
-  if (devCoreEnabled) {
+  // The literal `__DEV__ && process.env...` test (not the `devCoreEnabled` constant) lets Metro fold
+  // this branch away in production, so no vault-engine / dev code reaches a release bundle.
+  if (__DEV__ && process.env.EXPO_PUBLIC_LV_DEV_CORE === '1') {
     const { createDevVaultCore } = await import('./dev/createDevVaultCore');
     const dev = await createDevVaultCore();
     return { kind: 'dev', core: dev.core, on: dev.on };

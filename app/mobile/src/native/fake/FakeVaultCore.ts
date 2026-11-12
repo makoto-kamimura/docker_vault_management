@@ -19,6 +19,7 @@ import {
   type VaultCoreEvents,
 } from '@localvault/core';
 import { base64urlEncode } from '@localvault/protocol';
+import { installW4bFake } from './w4bFake';
 
 type Listener<E extends VaultCoreEventName> = (payload: VaultCoreEvents[E]) => void;
 
@@ -65,6 +66,9 @@ export class FakeVaultCore implements VaultCore {
   private pending: { accountName: string; serverUrl: string; password: string } | null = null;
   private claim: { claimId: string; availableAt: string; serverUrl: string } | null = null;
   private items = new Map<string, ItemDetail>();
+  /** W4a: plaintext passwords and F2 history (newest first, max 5). */
+  private passwords = new Map<string, string>();
+  private history = new Map<string, { password: string; changedAt: string }[]>();
   private settings: Settings = {
     autoLockSec: 60,
     clipboardClearSec: 30,
@@ -335,8 +339,10 @@ export class FakeVaultCore implements VaultCore {
     if (!i) throw new VaultCoreError('E_NOT_FOUND');
     return i;
   }
-  async revealPassword(): Promise<string> {
-    return unsupported();
+  async revealPassword(id: string): Promise<string> {
+    const pw = this.passwords.get(id);
+    if (pw === undefined) throw new VaultCoreError('E_NOT_FOUND');
+    return pw;
   }
   async saveItem(input: ItemInput) {
     const id = input.id ?? fakeId();
@@ -359,6 +365,16 @@ export class FakeVaultCore implements VaultCore {
       conflictOf: null,
       hasPassword: input.password !== undefined || (prev?.hasPassword ?? false),
     };
+    if (input.password !== undefined) {
+      const old = this.passwords.get(id);
+      if (old !== undefined && old !== input.password) {
+        this.history.set(
+          id,
+          [{ password: old, changedAt: iso }, ...(this.history.get(id) ?? [])].slice(0, 5),
+        );
+      }
+      this.passwords.set(id, input.password);
+    }
     this.items.set(id, detail);
     this.emit('onVaultChanged', {});
     this.emit('onSyncNeeded', {});
@@ -374,28 +390,43 @@ export class FakeVaultCore implements VaultCore {
   }
   async purgeItem(id: string) {
     this.items.delete(id);
+    this.passwords.delete(id);
+    this.history.delete(id);
   }
-  async resolveConflict(): Promise<void> {
-    return unsupported();
+  async resolveConflict(copyId: string, keep: 'copy' | 'original'): Promise<void> {
+    const copy = await this.getItem(copyId);
+    if (keep === 'original') return this.purgeItem(copyId);
+    if (copy.conflictOf) await this.purgeItem(copy.conflictOf);
+    this.items.set(copyId, { ...copy, isConflictCopy: false, conflictOf: null });
   }
   async unlinkAndroidApp(): Promise<void> {
     return unsupported();
   }
-  async getPasswordHistory(): Promise<{ index: number; changedAt: string }[]> {
-    return [];
+  async getPasswordHistory(id: string): Promise<{ index: number; changedAt: string }[]> {
+    return (this.history.get(id) ?? []).map((h, index) => ({ index, changedAt: h.changedAt }));
   }
-  async revealHistoricPassword(): Promise<string> {
-    return unsupported();
+  async revealHistoricPassword(id: string, index: number): Promise<string> {
+    const h = this.history.get(id)?.[index];
+    if (!h) throw new VaultCoreError('E_NOT_FOUND');
+    return h.password;
   }
-  async copyHistoricPassword(): Promise<{ clearsAt: string | null }> {
-    return unsupported();
+  async copyHistoricPassword(id: string, index: number): Promise<{ clearsAt: string | null }> {
+    await this.revealHistoricPassword(id, index);
+    return this.copy(id, 'password');
   }
-  async clearPasswordHistory(): Promise<void> {}
-  async copy(): Promise<{ clearsAt: string | null }> {
-    return { clearsAt: null };
+  async clearPasswordHistory(id: string): Promise<void> {
+    this.history.delete(id);
   }
-  async generatePassword(): Promise<string> {
-    return unsupported();
+  /** Test hook: every copy, in order. */
+  copied: { id: string; field: 'username' | 'password' }[] = [];
+  async copy(id: string, field: 'username' | 'password'): Promise<{ clearsAt: string | null }> {
+    await this.getItem(id);
+    this.copied.push({ id, field });
+    const sec = this.settings.clipboardClearSec;
+    return { clearsAt: sec === null ? null : new Date(this.now() + sec * 1000).toISOString() };
+  }
+  async generatePassword(o: { length: number }): Promise<string> {
+    return 'Ab3$'.repeat(Math.ceil(o.length / 4)).slice(0, o.length);
   }
 
   // ---- sync
@@ -597,3 +628,6 @@ export class FakeVaultCore implements VaultCore {
     return false;
   }
 }
+
+// W4b: devices / approvals / rotation / recovery code / backup methods (see w4bFake.ts).
+installW4bFake(FakeVaultCore);

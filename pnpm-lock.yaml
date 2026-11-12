@@ -242,6 +242,9 @@ importers:
       '@localvault/protocol':
         specifier: workspace:*
         version: link:../packages/protocol
+      '@localvault/vault-engine':
+        specifier: workspace:*
+        version: link:../packages/vault-engine
       '@shopify/flash-list':
         specifier: 2.3.2
         version: 2.3.2(@babel/runtime@7.29.13)(react-native@0.88.1(@babel/core@7.29.13(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.13(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)

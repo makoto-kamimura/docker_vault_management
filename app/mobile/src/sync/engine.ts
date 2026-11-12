@@ -43,6 +43,7 @@ export async function syncOnce(deps: {
         cursor: res.cursor,
         keyset: res.keyset,
         fullResync: restarted,
+        hasMore: res.hasMore,
       });
       if (r.needsMasterPassword) needsMasterPassword = true;
       if (!res.hasMore) return;
