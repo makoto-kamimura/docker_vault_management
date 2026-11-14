@@ -12,6 +12,9 @@ coverage/
 platform/secrets/*
 !platform/secrets/.gitkeep
 platform/backups/
+# swift (VaultKit の swift test)
+.build/
+.swiftpm/
 # expo / react native
 .expo/
 app/mobile/ios/

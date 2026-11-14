@@ -9,6 +9,7 @@
     "android": "expo run:android",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:native": "swift test --package-path modules/vault-kit/ios",
     "doctor": "expo-doctor",
     "licenses": "node scripts/generate-licenses.mjs"
   },
