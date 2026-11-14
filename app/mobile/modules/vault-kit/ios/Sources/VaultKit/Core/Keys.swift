@@ -19,7 +19,7 @@ public struct KeysetBundle: Sendable {
 public enum Keys {
   /// The master password is NFKC-normalised; surrounding whitespace is NOT trimmed (§5.4).
   public static func passwordBytes(_ password: String) -> Bytes {
-    Array(password.precomposedStringWithCompatibilityMapping.utf8)
+    Array(password.nfkc.utf8)
   }
 
   /// p = PBKDF2(NFKC(pw), salt, iterations, 32); ikm = p || SK;

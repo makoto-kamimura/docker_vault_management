@@ -12,6 +12,7 @@
       "!app/shared",
       "!**/*.dat",
       "!app/packages/crypto-vectors/vectors",
+      "!app/mobile/modules/vault-kit/ios/Tests/VaultKitTests/Fixtures",
       "!**/*.md"
     ]
   },

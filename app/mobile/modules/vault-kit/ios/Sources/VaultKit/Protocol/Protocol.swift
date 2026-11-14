@@ -163,7 +163,7 @@ public enum AccountName {
 
   /// NFKC + lower-case (whitespace NOT trimmed), then validate. "Alice" and "alice" are the same.
   public static func normalize(_ input: String) -> Result<String, AccountNameError> {
-    validate(input.precomposedStringWithCompatibilityMapping.lowercased())
+    validate(input.nfkc.lowercased())
   }
 }
 

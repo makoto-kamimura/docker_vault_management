@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:native": "swift test --package-path modules/vault-kit/ios",
+    "parity:core": "tsx modules/vault-kit/scripts/gen-core-parity.mts",
     "doctor": "expo-doctor",
     "licenses": "node scripts/generate-licenses.mjs"
   },
@@ -54,6 +55,7 @@
     "@types/react": "~19.3.0",
     "babel-plugin-transform-remove-console": "~6.9.0",
     "babel-preset-expo": "~58.0.0",
+    "tsx": "^4.23.15",
     "vitest": "^5.1.0"
   },
   "expo": {

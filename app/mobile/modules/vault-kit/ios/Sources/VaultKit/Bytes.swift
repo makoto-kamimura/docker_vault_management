@@ -176,3 +176,21 @@ public enum UUIDBytes {
     return try fromBytes(b)
   }
 }
+
+extension String {
+  /// JS `String#trim()`: strips WhiteSpace and LineTerminator code points (incl. U+FEFF).
+  public var jsTrimmed: String {
+    let scalars = unicodeScalars
+    guard let first = scalars.firstIndex(where: { !Crockford.isJSWhitespace($0) }) else { return "" }
+    let last = scalars.lastIndex(where: { !Crockford.isJSWhitespace($0) })!
+    return String(scalars[first...last])
+  }
+}
+
+extension String {
+  /// Unicode NFKC as JS `normalize('NFKC')` produces it. Foundation's compatibility mapping can
+  /// leave a canonical composition undone (e.g. half-width "ｶﾞ" stays U+30AB U+3099 instead of
+  /// U+30AC), so canonical composition (NFC) is applied afterwards; NFC(NFKC(x)) == NFKC(x).
+  /// This feeds the master-password KDF, so it must match the TS reference exactly.
+  public var nfkc: String { precomposedStringWithCompatibilityMapping.precomposedStringWithCanonicalMapping }
+}
