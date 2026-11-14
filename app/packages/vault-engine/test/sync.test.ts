@@ -46,6 +46,31 @@ describe('sync (§17.1 同期)', () => {
     expect((await b.e.listItems()).map((i) => i.isConflictCopy)).toEqual([false]);
   });
 
+  test('applying server results asks for another sync only while local changes remain', async () => {
+    const { s, a, b } = await two();
+    let needed = 0;
+    a.e.on('onSyncNeeded', () => needed++);
+    await syncOnce(a.e, s); // nothing local to send
+    expect(needed).toBe(0);
+    await a.e.saveItem(item('Local'));
+    expect(needed).toBe(1); // the save itself
+    await syncOnce(a.e, s); // pushes it; nothing left afterwards
+    expect(needed).toBe(1);
+
+    // A conflict leaves a local copy to push: one more sync is requested.
+    const x = (await a.e.listItems())[0] as { id: string };
+    await syncOnce(b.e, s);
+    await b.e.saveItem({ ...item('Local'), id: x.id, notes: 'from B' });
+    await syncOnce(b.e, s);
+    await a.e.saveItem({ ...item('Local'), id: x.id, notes: 'from A' });
+    needed = 0;
+    await syncOnce(a.e, s);
+    expect(needed).toBeGreaterThan(0);
+    needed = 0;
+    await syncOnce(a.e, s);
+    expect(needed).toBe(0);
+  });
+
   test('identical edits do not create a copy', async () => {
     const { s, a, b } = await two();
     const x = await a.e.saveItem(item('Same'));

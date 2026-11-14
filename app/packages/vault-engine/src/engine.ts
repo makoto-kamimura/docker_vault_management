@@ -385,6 +385,17 @@ class VaultEngine implements VaultCore, EngineExtras {
     this.#emit('onSyncNeeded', {});
   }
 
+  /**
+   * Save after applying server results (push results, pulled records). Asks for another sync only
+   * when local changes are still waiting to be sent (e.g. a conflict copy); otherwise every sync
+   * would schedule the next one and the app would poll the server continuously.
+   */
+  async #saveSynced(): Promise<void> {
+    await this.#persistFile();
+    this.#emit('onVaultChanged', {});
+    if ([...this.#recs.values()].some((r) => r.dirty)) this.#emit('onSyncNeeded', {});
+  }
+
   async #auth(reason: string): Promise<AuthToken> {
     return this.d.biometric.authenticate(reason);
   }
@@ -1607,7 +1618,7 @@ class VaultEngine implements VaultCore, EngineExtras {
       if (await this.#resolve(cur, sp)) conflicts++;
     }
     await this.#adoptMeta();
-    await this.#save();
+    await this.#saveSynced();
     return { conflicts };
   }
 
@@ -1694,7 +1705,7 @@ class VaultEngine implements VaultCore, EngineExtras {
     if (last) file.sync.lastSyncedAt = this.#nowIso();
     await this.#adoptMeta();
     await this.#persistLocal();
-    await this.#save();
+    await this.#saveSynced();
     return { conflicts, needsMasterPassword: false };
   }
 
