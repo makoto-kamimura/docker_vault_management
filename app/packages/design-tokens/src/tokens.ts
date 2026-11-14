@@ -1,4 +1,5 @@
-// LocalVault design tokens. Calm, minimal, system fonts, one indigo accent.
+// うちカギ design tokens. Calm, minimal, system fonts. Washi-like warm neutrals, one 藍 (ai, Japanese
+// indigo) accent, and 真鍮 (brass) as a sparing highlight (the key; favourites).
 // Sizes are dp / px numbers. Colours are #RRGGBB (overlay is #RRGGBBAA, supported by RN and CSS).
 
 export type ThemeName = 'light' | 'dark';
@@ -17,6 +18,8 @@ export type ColorTokens = {
   accentPressed: string;
   accentSubtle: string;
   onAccent: string;
+  /** 真鍮 (brass). Icons and small marks only (>= 3:1), never body text. */
+  highlight: string;
   success: string;
   warning: string;
   danger: string;
@@ -27,46 +30,48 @@ export type ColorTokens = {
 
 export const color: Record<ThemeName, ColorTokens> = {
   light: {
-    bg: '#FAFAFB',
+    bg: '#F8F7F3',
     bgElevated: '#FFFFFF',
-    bgSunken: '#F1F2F6',
+    bgSunken: '#EFEDE7',
     surface: '#FFFFFF',
-    border: '#E3E5EC',
-    borderStrong: '#8A8FA3',
-    text: '#14151F',
-    textSecondary: '#4A4E63',
-    textTertiary: '#666A80',
-    accent: '#4F46E5',
-    accentPressed: '#4338CA',
-    accentSubtle: '#EEF0FF',
+    border: '#E2DFD7',
+    borderStrong: '#8A877F',
+    text: '#1A1B20',
+    textSecondary: '#4C4B47',
+    textTertiary: '#67655F',
+    accent: '#1F4A86',
+    accentPressed: '#173A6B',
+    accentSubtle: '#E7EDF5',
     onAccent: '#FFFFFF',
-    success: '#1B7F4B',
+    highlight: '#946A1E',
+    success: '#1B7A49',
     warning: '#9A5B00',
     danger: '#C42B3A',
     dangerSubtle: '#FDECEE',
-    overlay: '#0F101A66',
-    focusRing: '#4F46E5',
+    overlay: '#14151A66',
+    focusRing: '#1F4A86',
   },
   dark: {
-    bg: '#0F1018',
-    bgElevated: '#181925',
-    bgSunken: '#0A0A10',
-    surface: '#1C1D2A',
-    border: '#2B2D3E',
-    borderStrong: '#6A6E86',
-    text: '#F2F3F8',
-    textSecondary: '#B5B9CC',
-    textTertiary: '#9094AB',
-    accent: '#8B93FF',
-    accentPressed: '#A5ABFF',
-    accentSubtle: '#23254A',
-    onAccent: '#0F1018',
+    bg: '#111214',
+    bgElevated: '#18191C',
+    bgSunken: '#0B0B0D',
+    surface: '#1D1E22',
+    border: '#2D2E33',
+    borderStrong: '#6C6C72',
+    text: '#F2F1EC',
+    textSecondary: '#BBB9B1',
+    textTertiary: '#96948C',
+    accent: '#8DB2EA',
+    accentPressed: '#A9C5F0',
+    accentSubtle: '#1A2639',
+    onAccent: '#0E1A2C',
+    highlight: '#D9AE5F',
     success: '#4CC38A',
     warning: '#F0B454',
     danger: '#FF6B7A',
     dangerSubtle: '#3A1820',
     overlay: '#000000B3',
-    focusRing: '#A5ABFF',
+    focusRing: '#A9C5F0',
   },
 };
 
@@ -204,6 +209,38 @@ export const layout = {
   /** Max content width for the extension popup / wide screens. */
   maxContentWidth: 640,
   popupWidth: 360,
+} as const;
+
+// ------------------------------------------------------------------ brand (うちカギ)
+
+/**
+ * Fixed brand colours for the mark and the app icon (not themed: the mark looks the same in light
+ * and dark). brass on ai is >= 4.5:1.
+ */
+export const brand = {
+  /** 藍 */
+  ai: '#1F4A86',
+  /** 真鍮 */
+  brass: '#E2BC6E',
+} as const;
+
+/**
+ * The mark on a 1024 grid: a key whose bow is a house (うち + カギ). Shared by the RN BrandMark
+ * component and app/mobile/scripts/generate-icons.py (keep the numbers in sync).
+ */
+export const brandMark = {
+  viewBox: 1024,
+  /** Tile corner radius when drawn as a tile (iOS masks the real icon itself). */
+  tileRadius: 224,
+  bow: [512, 212, 748, 420, 690, 420, 690, 630, 334, 630, 334, 420, 276, 420],
+  keyholeCircle: { cx: 512, cy: 490, r: 46 },
+  keyholeStem: [490, 520, 534, 520, 548, 590, 476, 590],
+  /** x, y, width, height */
+  bars: [
+    [484, 628, 56, 222],
+    [538, 740, 78, 42],
+    [538, 800, 58, 42],
+  ],
 } as const;
 
 // ------------------------------------------------------------------ avatars (FR-24)

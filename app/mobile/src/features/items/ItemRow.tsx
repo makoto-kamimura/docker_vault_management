@@ -101,7 +101,9 @@ function ItemRowBase({ item, highlighted, onOpen, onCopy, onFavorite, onTrash }:
               <Text variant="callout" weight="semibold" numberOfLines={1} style={{ flexShrink: 1 }}>
                 {title}
               </Text>
-              {item.favorite && <Star size={14} color={th.color.warning} fill={th.color.warning} />}
+              {item.favorite && (
+                <Star size={14} color={th.color.highlight} fill={th.color.highlight} />
+              )}
               {item.isConflictCopy && <Badge label={t('items.conflictBadge')} tone="danger" />}
             </View>
             {item.username !== '' && (

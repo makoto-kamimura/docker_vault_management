@@ -5,6 +5,9 @@ const BUNDLE_ID = 'com.example.localvault'; // §19 Q8
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
+  // `name` is also the Xcode project / scheme name, so it stays the identifier. The name people
+  // see is うちカギ (CFBundleDisplayName below).
+  // TODO(native wave): Android label (strings.xml app_name) once the Android build is in scope.
   name: 'LocalVault',
   slug: 'localvault',
   scheme: 'localvault',
@@ -18,6 +21,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     supportsTablet: false,
     // TODO(native wave): appleTeamId
     infoPlist: {
+      CFBundleDisplayName: 'うちカギ',
       NSFaceIDUsageDescription: '保存したログイン情報を保護するために Face ID を使用します',
       NSCameraUsageDescription: 'PC の登録や復旧で QR コードを読み取るためにカメラを使用します',
       ITSAppUsesNonExemptEncryption: false,
@@ -30,7 +34,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     allowBackup: false,
     // TODO(native wave): googleServicesFile: './google-services.json' (FCM)
     permissions: ['android.permission.CAMERA', 'android.permission.POST_NOTIFICATIONS'],
-    adaptiveIcon: { foregroundImage: './assets/adaptive-icon.png', backgroundColor: '#4F46E5' },
+    adaptiveIcon: { foregroundImage: './assets/adaptive-icon.png', backgroundColor: '#1F4A86' },
   },
   plugins: [
     'expo-router',

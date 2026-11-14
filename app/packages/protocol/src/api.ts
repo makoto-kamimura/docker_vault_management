@@ -745,12 +745,12 @@ export type PushPayload = z.infer<typeof pushPayloadSchema>;
 
 /** Fixed notification texts (the server does not know device names). */
 export const PUSH_TEXT = {
-  unlock: { title: 'LocalVault', body: 'PC から解錠のリクエストがあります' },
+  unlock: { title: 'うちカギ', body: 'PC から解錠のリクエストがあります' },
   rc_claim: {
-    title: 'LocalVault',
+    title: 'うちカギ',
     body: '復旧コードによる復元が始まりました。心当たりがなければ取り消してください',
   },
-  rc_frozen: { title: 'LocalVault', body: '復旧コードが凍結されました。アプリで確認してください' },
+  rc_frozen: { title: 'うちカギ', body: '復旧コードが凍結されました。アプリで確認してください' },
 } as const;
 
 /** Deep-link a tapped notification opens (§13.7, §14). */

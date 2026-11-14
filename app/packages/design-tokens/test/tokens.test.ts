@@ -60,6 +60,8 @@ describe.each(themes)('contrast (%s)', (name) => {
     expect(contrast(c.borderStrong, c.bg)).toBeGreaterThanOrEqual(3);
     expect(contrast(c.borderStrong, c.surface)).toBeGreaterThanOrEqual(3);
     expect(contrast(c.accent, c.bg)).toBeGreaterThanOrEqual(3);
+    for (const g of ['bg', 'bgElevated', 'surface'] as const)
+      expect(contrast(c.highlight, c[g]), `highlight on ${g}`).toBeGreaterThanOrEqual(3);
   });
   it('hex formats', () => {
     for (const [k, v] of Object.entries(c))

@@ -8,8 +8,9 @@ export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   // Keep the manifest free of anything the spec (12.2) does not list.
   manifest: ({ mode }) => ({
-    name: 'LocalVault',
-    description: 'LocalVault password manager (self-hosted, zero-knowledge) for your browser',
+    name: 'うちカギ',
+    description:
+      'うちカギ (Uchikagi): self-hosted, zero-knowledge password manager for your browser',
     minimum_chrome_version: '116',
     permissions: ['storage', 'unlimitedStorage', 'alarms', 'idle', 'offscreen'],
     // The server origin is requested at runtime (chrome.permissions.request), nothing else.

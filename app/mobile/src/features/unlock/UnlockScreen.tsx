@@ -1,9 +1,17 @@
-import { Lock, ScanFace } from 'lucide-react-native';
+import { ScanFace } from 'lucide-react-native';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { Banner, BottomSheet, Button, PasswordField, Screen, Text } from '../../components';
+import {
+  Banner,
+  BottomSheet,
+  BrandMark,
+  Button,
+  PasswordField,
+  Screen,
+  Text,
+} from '../../components';
 import { t } from '../../i18n';
-import { makeStyles, useTheme } from '../../theme';
+import { makeStyles } from '../../theme';
 import { formatThrottle, useUnlock } from './useUnlock';
 
 const useStyles = makeStyles((th) => ({
@@ -13,19 +21,10 @@ const useStyles = makeStyles((th) => ({
     paddingTop: th.space[10],
     paddingBottom: th.space[4],
   },
-  badge: {
-    width: 88,
-    height: 88,
-    borderRadius: th.radius.xl,
-    backgroundColor: th.color.accent,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
 }));
 
 export function UnlockScreen() {
   const s = useStyles();
-  const th = useTheme();
   const u = useUnlock();
   const [forgot, setForgot] = useState(false);
   const throttled = u.throttleSec > 0;
@@ -63,9 +62,7 @@ export function UnlockScreen() {
       }
     >
       <View style={s.head}>
-        <View style={s.badge}>
-          <Lock size={40} color={th.color.onAccent} strokeWidth={1.75} />
-        </View>
+        <BrandMark size={88} />
         <Text variant="largeTitle" accessibilityRole="header">
           {t('unlock.title')}
         </Text>

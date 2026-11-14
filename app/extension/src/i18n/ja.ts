@@ -1,6 +1,6 @@
 // All user-facing strings (Japanese). Code and comments stay English.
 export const ja = {
-  appName: 'LocalVault',
+  appName: 'うちカギ',
   common: {
     cancel: 'キャンセル',
     close: '閉じる',
@@ -61,7 +61,7 @@ export const ja = {
     generic: '処理できませんでした',
   },
   options: {
-    title: 'LocalVault の設定',
+    title: 'うちカギの設定',
     serverSection: 'サーバー',
     serverLabel: 'サーバー URL',
     serverHelp: 'https:// から始まる URL を入力します。この URL だけと通信します。',
@@ -69,7 +69,7 @@ export const ja = {
     pairingSection: 'ペアリング',
     pairingStart: 'ペアリングを開始',
     pairingHelp:
-      'スマホの LocalVault で「PC を追加」を選び、下の QR コードを読み取ってください。承認すると、この PC はすぐに解錠されます。',
+      'スマホのうちカギで「PC を追加」を選び、下の QR コードを読み取ってください。承認すると、この PC はすぐに解錠されます。',
     pairingQrLabel: 'ペアリング用の QR コード',
     pairingExpires: (s: number) => `有効期限 残り ${s} 秒`,
     pairingExpired: 'QR コードの有効期限が切れました。もう一度開始してください',
@@ -90,14 +90,14 @@ export const ja = {
       'パスワードはこの PC のメモリ上でだけ復号され、ディスクには保存されません。ロックは、設定した時間、PC の無操作 15 分、画面ロック、ブラウザの終了で行われます。',
   },
   content: {
-    iconLabel: 'LocalVault で入力',
-    panelLabel: 'LocalVault',
+    iconLabel: 'うちカギで入力',
+    panelLabel: 'うちカギ',
     candidatesTitle: '候補',
     frameTitle: (domain: string) => `${domain} のフォーム`,
     noCandidates: 'このサイトに一致する項目がありません',
-    unlockPrompt: 'LocalVault はロックされています',
+    unlockPrompt: 'うちカギはロックされています',
     unlockButton: 'スマホで解錠',
-    notPaired: 'LocalVault が未設定です。拡張の設定からペアリングしてください',
+    notPaired: 'うちカギが未設定です。拡張の設定からペアリングしてください',
     waitingTitle: 'スマホで番号を入力してください',
     codeLabel: '確認番号',
     cancel: 'キャンセル',

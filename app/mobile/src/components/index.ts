@@ -2,6 +2,7 @@ export * from './Avatar';
 export * from './Badge';
 export * from './Banner';
 export * from './BottomSheet';
+export * from './BrandMark';
 export * from './Button';
 export * from './CodeInput';
 export * from './Countdown';

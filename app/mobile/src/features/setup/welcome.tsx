@@ -1,20 +1,12 @@
-import { EyeOff, KeyRound, ShieldCheck, WifiOff } from 'lucide-react-native';
+import { EyeOff, KeyRound, WifiOff } from 'lucide-react-native';
 import { View } from 'react-native';
-import { Button, Screen, Text } from '../../components';
+import { BrandMark, Button, Screen, Text } from '../../components';
 import { t } from '../../i18n';
 import { nav } from '../../lib/nav';
 import { makeStyles, useTheme } from '../../theme';
 
 const useStyles = makeStyles((th) => ({
   hero: { alignItems: 'flex-start', gap: th.space[4], paddingTop: th.space[6] },
-  mark: {
-    width: 72,
-    height: 72,
-    borderRadius: th.radius.xl,
-    backgroundColor: th.color.accent,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   point: {
     flexDirection: 'row',
     gap: th.space[4],
@@ -68,9 +60,7 @@ export function WelcomeScreen() {
       }
     >
       <View style={s.hero}>
-        <View style={s.mark}>
-          <ShieldCheck size={38} color={th.color.onAccent} strokeWidth={1.75} />
-        </View>
+        <BrandMark size={72} />
         <Text variant="largeTitle" accessibilityRole="header">
           {t('setup.welcome.title')}
         </Text>

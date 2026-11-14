@@ -3,7 +3,7 @@ import { jaSettings } from './ja.settings';
 // All user-facing strings (NFR-09). Flat, typed keys; `{name}` placeholders are interpolated by t().
 export const ja = {
   // ---- common
-  'common.appName': 'LocalVault',
+  'common.appName': 'うちカギ',
   'common.next': '次へ',
   'common.back': '戻る',
   'common.cancel': 'キャンセル',
@@ -86,7 +86,7 @@ export const ja = {
   'error.notFound': 'アカウントが見つかりません。',
 
   // ---- setup: welcome
-  'setup.welcome.title': 'LocalVault へようこそ',
+  'setup.welcome.title': 'うちカギへようこそ',
   'setup.welcome.lead': 'あなたのサーバーだけに保存される、ゼロ知識のパスワードマネージャーです。',
   'setup.welcome.point1.title': 'サーバーは中身を読めません',
   'setup.welcome.point1.body':
@@ -159,7 +159,7 @@ export const ja = {
   'setup.kit.consent':
     'マスターパスワードとリカバリーキーの両方を失うと、誰にも復旧できないことを理解しました。',
   'setup.kit.continue': '控えました。次へ',
-  'setup.kit.pdfTitle': 'LocalVault 緊急キット',
+  'setup.kit.pdfTitle': 'うちカギ 緊急キット',
   'setup.kit.pdfCreated': '作成日',
   'setup.kit.pdfServer': 'サーバー URL',
   'setup.kit.pdfAccount': 'アカウント名',
@@ -179,7 +179,7 @@ export const ja = {
   'setup.restore.submit': '復元する',
   'setup.restore.submitting': '復元しています',
   'setup.restore.scanTitle': 'QR コードを読み取る',
-  'setup.restore.scanBad': 'LocalVault の緊急キットの QR コードではありません。',
+  'setup.restore.scanBad': 'うちカギの緊急キットの QR コードではありません。',
   'setup.restore.step.verify': '確認',
   'setup.restore.step.keys': '鍵の準備',
   'setup.restore.step.sync': 'データの取得',
@@ -196,7 +196,7 @@ export const ja = {
   'setup.restoreCode.textHint': 'LVRC-から始まる文字列',
   'setup.restoreCode.submit': '復元を開始',
   'setup.restoreCode.submitting': '要求を送っています',
-  'setup.restoreCode.scanBad': 'LocalVault の復旧シートの QR コードではありません。',
+  'setup.restoreCode.scanBad': 'うちカギの復旧シートの QR コードではありません。',
 
   // ---- setup: restore wait
   'setup.wait.title': '復元の待機中',
@@ -251,9 +251,9 @@ export const ja = {
   'setup.autofill.enable': '設定を開く',
   'setup.autofill.ios.step1': '設定アプリを開く',
   'setup.autofill.ios.step2': '「一般」→「自動入力とパスワード」を選ぶ',
-  'setup.autofill.ios.step3': '「自動入力」をオンにし、LocalVault にチェックを入れる',
+  'setup.autofill.ios.step3': '「自動入力」をオンにし、うちカギにチェックを入れる',
   'setup.autofill.android.step1': '設定アプリで「パスワードとアカウント」を開く',
-  'setup.autofill.android.step2': '「自動入力サービス」で LocalVault を選ぶ',
+  'setup.autofill.android.step2': '「自動入力サービス」でうちカギを選ぶ',
   'setup.autofill.android.step3':
     'Chrome の設定 →「自動入力サービス」→「他のサービスを使用」をオンにする',
   'setup.autofill.finish': '完了',
@@ -261,7 +261,7 @@ export const ja = {
 
   // ---- unlock
   'unlock.title': 'ロック中',
-  'unlock.lead': 'LocalVault を開くには、ロックを解除してください。',
+  'unlock.lead': 'うちカギを開くには、ロックを解除してください。',
   'unlock.password': 'マスターパスワード',
   'unlock.submit': 'ロックを解除',
   'unlock.biometric': '{kind}で解除',

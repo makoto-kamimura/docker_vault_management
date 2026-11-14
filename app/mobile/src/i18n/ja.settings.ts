@@ -134,7 +134,7 @@ export const jaSettings = {
   'pair.title': 'PC を追加',
   'pair.lead': 'PC の拡張に表示された QR コードを読み取ります。',
   'pair.hint': '信頼できる自分の PC の画面だけを読み取ってください。',
-  'pair.notPairQr': 'LocalVault の PC 追加用 QR コードではありません。',
+  'pair.notPairQr': 'うちカギの PC 追加用 QR コードではありません。',
   'pair.confirmTitle': 'この PC を登録しますか',
   'pair.confirmLead': '内容を確認して、名前を付けてください。',
   'pair.browser': 'ブラウザ',
@@ -214,7 +214,7 @@ export const jaSettings = {
   'set.help': 'ヘルプ',
   'set.licenses': 'ライセンス',
   'set.signOut': 'この端末からサインアウト',
-  'set.footer': 'LocalVault',
+  'set.footer': 'うちカギ',
 
   // ---- account
   'acct.title': 'アカウント',
@@ -249,7 +249,7 @@ export const jaSettings = {
   'acct.deleteWarn': '元に戻せません。必要なら先にバックアップを書き出してください。',
   'acct.deleteNameLabel': '確認のためアカウント名「{name}」を入力',
   'acct.deleteConfirm': '完全に削除',
-  'acct.footer': 'マスターパスワードとリカバリーキーは、LocalVault の運営者にも復元できません。',
+  'acct.footer': 'マスターパスワードとリカバリーキーは、うちカギの運営者にも復元できません。',
 
   // ---- recovery code
   'rc.title': '復旧コード',
@@ -293,7 +293,7 @@ export const jaSettings = {
   'rc.tailWrong': '末尾 6 文字が一致しません。',
   'rc.sheetDone': '保管しました',
   'rc.pdfFailed': '復旧シートを作成できませんでした。',
-  'rc.pdf.title': 'LocalVault 復旧シート',
+  'rc.pdf.title': 'うちカギ 復旧シート',
   'rc.pdf.warn': 'このシートだけで、すべてのパスワードを開けます。金庫などで保管してください。',
   'rc.pdf.wait': '猶予期間',
   'rc.pdf.waitHours': '{h} 時間',
@@ -401,7 +401,7 @@ export const jaSettings = {
 
   // ---- licenses
   'lic.title': 'ライセンス',
-  'lic.lead': 'LocalVault は次のオープンソースソフトウェアを使っています。',
+  'lic.lead': 'うちカギは次のオープンソースソフトウェアを使っています。',
   'lic.pslTitle': 'Public Suffix List',
   'lic.pslBody':
     'サイトの照合に Public Suffix List（Mozilla Public License 2.0）のデータを同梱しています。',

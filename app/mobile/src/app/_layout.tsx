@@ -9,6 +9,7 @@ import { fakeStartRoute } from '../env';
 import { NotificationRouter } from '../features/approvals/NotificationRouter';
 import { RouteGuard } from '../features/navigation/RouteGuard';
 import { SessionProvider } from '../features/session/SessionProvider';
+import { t as tr } from '../i18n';
 import { nav } from '../lib/nav';
 import { useLockStore } from '../state/lockStore';
 import { ThemeProvider, useTheme } from '../theme';
@@ -30,7 +31,7 @@ function BootFailure({ message }: { message: string }) {
         gap: 8,
       }}
     >
-      <Text variant="title2">LocalVault</Text>
+      <Text variant="title2">{tr('common.appName')}</Text>
       <Text tone="secondary">{message}</Text>
     </View>
   );
