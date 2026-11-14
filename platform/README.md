@@ -15,7 +15,7 @@ platform/
   env/.env.example      設定のひな形（.env は git 管理外）
   secrets/              秘密ファイル（git 管理外）
   backups/              バックアップ出力先（git 管理外）
-  scripts/              運用スクリプト
+  scripts/              運用スクリプト（deploy.sh：Git から取り込んで配置）
 ```
 
 ネットワークは `edge`（caddy と app）と `data`（app / db / backup、`internal: true` で外部に出られない）に分かれます。db は公開しません。app は読み取り専用ルート、全 capability を破棄、`no-new-privileges` で動きます。
@@ -29,15 +29,11 @@ platform/
    platform/scripts/init-secrets.sh
    ```
    `platform/env/.env` の `LV_DOMAIN` と `PUBLIC_ORIGIN` を編集します。
-4. 起動する。
+4. 配置する（ビルド → マイグレーション → 起動 → ヘルスチェック）。更新のときも同じスクリプトを使います（`git pull` から行います）。
    ```sh
-   docker compose -f platform/docker/compose.yml --env-file platform/env/.env up -d --build
+   platform/scripts/deploy.sh
    ```
-5. DB マイグレーションを適用する（起動時には自動適用されません）。
-   ```sh
-   platform/scripts/migrate.sh prod
-   ```
-6. 最初の招待コードを発行する。
+5. 最初の招待コードを発行する。
    ```sh
    platform/scripts/invite.sh prod create --expires-in 7d
    ```

@@ -115,6 +115,19 @@ EXPO_PUBLIC_LV_FAKE_CORE=1 npx expo run:ios       # サーバーなしで画面�
 - `EXPO_PUBLIC_LV_DEV_CORE=1` は開発ビルドでだけ有効です。`http://localhost` は開発ビルドに限って許可されます（本番は https のみ）
 - 詳細と環境フラグの一覧は [app/mobile/README.md](app/mobile/README.md) を参照してください
 
+## サーバーを VPS に配置する
+
+配置は Git 経由です。VPS にこのリポジトリを clone し、秘密値を作ってから `platform/scripts/deploy.sh` を実行します。以後の更新は、`main` に push した後に VPS で `deploy.sh` を実行するだけです（バックアップ → ビルド → マイグレーション → 起動 → ヘルスチェック）。
+
+```sh
+git clone https://github.com/makoto-kamimura/docker_vault_management.git && cd docker_vault_management
+platform/scripts/init-secrets.sh      # 秘密値と platform/env/.env を作る（LV_DOMAIN と PUBLIC_ORIGIN を編集）
+platform/scripts/deploy.sh            # 配置
+platform/scripts/invite.sh prod create --expires-in 7d
+```
+
+前提（DNS、ポート、メモリ）と詳しい手順は [runbook の第 2 章と第 8 章](docs/runbook.md#2-初回デプロイ) を参照してください。
+
 ## ドキュメント
 
 | 文書 | 内容 |

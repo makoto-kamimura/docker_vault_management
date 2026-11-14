@@ -1,4 +1,4 @@
-# LocalVault 運用手順書
+# うちカギ（LocalVault）運用手順書
 
 この文書は、利用者のための自前サーバー（1 台の Docker ホスト）を運用する人のための手順です。`platform/README.md` と `app/server/README.md` の内容を、運用の順に並べ直したものです。仕様の根拠は [仕様 §13.9（運用）](spec.md) と [§5.12（ログ）](spec.md) です。v0.4 の決定が優先されます（[spec-review.md](spec-review.md)）。
 
@@ -28,24 +28,31 @@ Internet ──443/80──▶ caddy ──edge──▶ app (Hono :8787) ──
 - [ ] DNS：`LV_DOMAIN` の A/AAAA レコードをこのホストに向けた（第 3 章）
 - [ ] ファイアウォール：80/tcp、443/tcp、443/udp を開けた
 - [ ] 時刻：NTP で同期している（署名の時刻検証に使うため。ずれると `E_CLOCK_SKEW` になる）
-- [ ] Docker と Docker Compose が動く。リポジトリを clone した（イメージのビルドは Docker 内で行うため、ホストに Node.js は不要）
+- [ ] Docker と Docker Compose（v2）、Git、curl、openssl が動く（イメージのビルドは Docker 内で行うため、ホストに Node.js は不要）
+- [ ] ホストの目安：メモリ 2 GB 以上（イメージのビルドに使う。1 GB の場合はスワップを用意する）、ディスク 10 GB 以上
 
 **手順**
 
+配置は Git 経由で行います。サーバーには GitHub の公開リポジトリを clone し、更新は `git pull` で取り込みます（第 8 章）。秘密値と `.env` はサーバー上にだけ置き、Git には入れません。
+
 ```sh
-# 1. 秘密値と .env を作る（既存のファイルは上書きしない）
+# 1. リポジトリを取得する（運用するユーザーで。root でなくてよい）
+git clone https://github.com/makoto-kamimura/docker_vault_management.git
+cd docker_vault_management
+
+# 2. 秘密値と .env を作る（既存のファイルは上書きしない）
 platform/scripts/init-secrets.sh
 #    → platform/env/.env の LV_DOMAIN と PUBLIC_ORIGIN を編集する（第 4 章）
+#      REGISTRATION_MODE は invite のまま。APNS_* は空のまま（プッシュ通知を使わない場合）
 
-# 2. 起動（イメージをビルドして起動）
-docker compose -f platform/docker/compose.yml --env-file platform/env/.env up -d --build
-
-# 3. DB マイグレーションを適用（起動時には自動適用されない）
-platform/scripts/migrate.sh prod
+# 3. 配置する（ビルド → マイグレーション → 起動 → ヘルスチェック）
+platform/scripts/deploy.sh
 
 # 4. 最初の招待コードを発行（表示は 1 回だけ）
 platform/scripts/invite.sh prod create --expires-in 7d
 ```
+
+`deploy.sh` は初回、DB がまだ無いので事前のバックアップを省きます。初回は証明書の取得に 1〜2 分かかることがあります（ヘルスチェックは最大およそ 3 分待ちます）。
 
 **確認**
 
@@ -139,15 +146,41 @@ platform/scripts/backup-now.sh prod      # 更新前や復元前に必ず取る
 
 ## 8. 更新
 
+開発側で `main` に push した変更を、サーバーで取り込みます。
+
+```sh
+cd docker_vault_management
+platform/scripts/deploy.sh            # main を取り込んで配置する
+```
+
+`deploy.sh` が行うこと（失敗したらその場で止まり、理由を表示します）：
+
+1. 前提の確認：`platform/env/.env` と秘密ファイルがあること、`LV_DOMAIN` と `PUBLIC_ORIGIN` が設定済みであること、作業ツリーに未コミットの変更がないこと
+2. `git fetch` → `git pull --ff-only origin main`（早送りできない場合は止まる。サーバーでコミットしないこと）
+3. 事前のバックアップ（`backup-now.sh prod`。DB が動いていない初回は省く）
+4. イメージのビルド（`app`）
+5. DB マイグレーション（`migrate.sh prod`）
+6. 起動（`up -d --wait`）
+7. `https://<LV_DOMAIN>/v1/health` のヘルスチェック
+
+| オプション | 意味 |
+|---|---|
+| `--branch <名前>` | `main` 以外のブランチを取り込む（検証用） |
+| `--no-pull` | `git pull` をせず、いまのチェックアウトのまま配置する |
+| `--skip-backup` | 事前のバックアップを省く |
+
+手動で行う場合の手順（`deploy.sh` と同じ内容）：
+
 ```sh
 platform/scripts/backup-now.sh prod                                     # 1. 先にバックアップ
-git pull                                                                # 2. 更新を取り込む
+git pull --ff-only                                                      # 2. 更新を取り込む
 docker compose -f platform/docker/compose.yml --env-file platform/env/.env build   # 3. イメージをビルド
 platform/scripts/migrate.sh prod                                        # 4. マイグレーション
 docker compose -f platform/docker/compose.yml --env-file platform/env/.env up -d   # 5. 起動
 ```
 
 - 更新後に `/v1/health` と `cli.sh prod stats` を確認します。
+- 前の版に戻すとき：`git log` で戻したいコミットを確かめ、`git switch --detach <コミット>` の後に `platform/scripts/deploy.sh --no-pull` を実行します。マイグレーションを適用していた場合は、下のとおりバックアップから復元します。元に戻したら `git switch main` で戻してください。
 - 不具合が出たら、コードとイメージを前の版に戻します。マイグレーションを適用していた場合は、**バックアップから復元します**（逆向きのマイグレーションはありません）。
 - サーバーの時刻が NTP で同期されていることを、更新のたびに確認してください。
 
