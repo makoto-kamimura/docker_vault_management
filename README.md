@@ -141,3 +141,7 @@ platform/scripts/invite.sh prod create --expires-in 7d
 | [app/extension/README.md](app/extension/README.md) | ブラウザ拡張の構成とテスト |
 | [app/mobile/README.md](app/mobile/README.md) | スマホアプリの構成と環境フラグ |
 | [app/packages/crypto-vectors/README.md](app/packages/crypto-vectors/README.md) | 暗号テストベクタの形式 |
+
+## ライセンス
+
+[MIT](LICENSE)
