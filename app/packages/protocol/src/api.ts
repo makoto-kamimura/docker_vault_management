@@ -203,7 +203,9 @@ export const routes = {
     status: 201,
     request: {
       body: z.strictObject({
-        inviteCode: z.string().min(1).max(FIELD.inviteCodeMax),
+        // Empty in `open` mode: the app hides the invite field there. In `invite` mode an empty code
+        // matches no invite, so the server still answers E_REGISTRATION_CLOSED.
+        inviteCode: z.string().max(FIELD.inviteCodeMax),
         accountId: uuidSchema,
         accountName: accountNameSchema,
         keyset: keysetSchema.refine((k) => k.keysetVersion === 1 && k.vkVersion === 1, {
