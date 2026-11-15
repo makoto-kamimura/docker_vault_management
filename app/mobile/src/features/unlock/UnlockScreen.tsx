@@ -12,6 +12,7 @@ import {
 } from '../../components';
 import { t } from '../../i18n';
 import { makeStyles } from '../../theme';
+import { LongTaskNotice } from '../session/LongTaskNotice';
 import { formatThrottle, useUnlock } from './useUnlock';
 
 const useStyles = makeStyles((th) => ({
@@ -70,6 +71,7 @@ export function UnlockScreen() {
           {t('unlock.lead')}
         </Text>
       </View>
+      <LongTaskNotice active={u.busy} />
       {u.bioInvalidated && <Banner kind="warning" message={t('unlock.bioInvalidated')} />}
       <PasswordField
         testID="unlock-password"

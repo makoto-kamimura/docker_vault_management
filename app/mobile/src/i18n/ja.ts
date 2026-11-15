@@ -10,6 +10,12 @@ export const ja = {
   'common.close': '閉じる',
   'common.ok': 'OK',
   'common.done': '完了',
+
+  // ---- long-running key work (PBKDF2 etc.)
+  'longTask.elapsed': '経過 {time}',
+  'longTask.dev':
+    'この開発用ビルドは暗号処理を JavaScript で行うため、鍵の計算に 1〜3 分ほどかかります。アプリを開いたままお待ちください（処理中は画面が自動で消えません）。',
+  'longTask.native': '鍵を計算しています。アプリを開いたままお待ちください。',
   'common.skip': 'スキップ',
   'common.retry': '再試行',
   'common.continue': '続ける',
@@ -134,6 +140,8 @@ export const ja = {
   'setup.create.confirm': 'マスターパスワード（確認）',
   'setup.create.submit': 'アカウントを作成',
   'setup.create.submitting': '作成しています',
+  'setup.create.step.keys': '鍵の作成',
+  'setup.create.step.register': 'サーバーに登録',
   'setup.create.error.inviteRequired': '招待コードを入力してください。',
   'setup.create.error.accountTooShort': 'アカウント名は 3 文字以上にしてください。',
   'setup.create.error.accountTooLong': 'アカウント名は 32 文字以内にしてください。',

@@ -8,7 +8,6 @@ import {
   BottomSheet,
   Button,
   PasswordField,
-  ProgressSteps,
   QrScanner,
   RecoveryKeyInput,
   Screen,
@@ -22,6 +21,7 @@ import { nav } from '../../lib/nav';
 import { isRecoveryKeyComplete } from '../../lib/recoveryKeyInput';
 import { useSetupDraft } from '../../state/setupDraft';
 import { describeRestoreError } from '../errors/messages';
+import { LongTaskNotice } from '../session/LongTaskNotice';
 import { useSession } from '../session/SessionProvider';
 import { accountNameError } from './create';
 import { FlowInputError, parseKitScan, type RestoreProgress, restoreAccountFlow } from './flows';
@@ -117,16 +117,15 @@ export function RestoreScreen() {
         />
       }
     >
-      {busy && (
-        <ProgressSteps
-          steps={[
-            t('setup.restore.step.verify'),
-            t('setup.restore.step.keys'),
-            t('setup.restore.step.sync'),
-          ]}
-          current={STEPS.indexOf(step)}
-        />
-      )}
+      <LongTaskNotice
+        active={busy}
+        steps={[
+          t('setup.restore.step.verify'),
+          t('setup.restore.step.keys'),
+          t('setup.restore.step.sync'),
+        ]}
+        current={STEPS.indexOf(step)}
+      />
       <Button
         testID="restore-scan"
         variant="secondary"

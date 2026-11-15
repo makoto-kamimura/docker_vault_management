@@ -22,6 +22,8 @@ export class FlowInputError extends Error {
   }
 }
 
+export type CreateProgress = 'keys' | 'register';
+
 export async function createAccountFlow(deps: {
   core: VaultCore;
   makeApi: MakeApi;
@@ -29,15 +31,18 @@ export async function createAccountFlow(deps: {
   accountName: string;
   masterPassword: string;
   inviteCode: string;
+  onProgress?: (step: CreateProgress) => void;
 }): Promise<{ recoveryKey: string }> {
   const name = normalizeAccountName(deps.accountName);
   if (!name.ok) throw new FlowInputError('accountName');
+  deps.onProgress?.('keys');
   const { request, recoveryKey } = await deps.core.createAccount({
     serverUrl: deps.serverUrl,
     accountName: name.name,
     masterPassword: deps.masterPassword,
     inviteCode: deps.inviteCode.trim(),
   });
+  deps.onProgress?.('register');
   try {
     await deps.makeApi(deps.serverUrl).sendServerRequest(request);
   } catch (e) {
