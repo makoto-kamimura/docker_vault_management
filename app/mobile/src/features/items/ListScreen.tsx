@@ -33,8 +33,14 @@ const useStyles = makeStyles((th) => ({
     gap: th.space[3],
     paddingBottom: th.space[2],
   },
-  titleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  tools: { flexDirection: 'row', alignItems: 'center' },
+  // Icons sit on their own row above the large title: five 44pt targets next to a 34pt title do
+  // not fit a 375–393pt wide iPhone (the right-hand icons were clipped).
+  tools: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginRight: -th.space[2],
+  },
   pad: { paddingHorizontal: th.layout.gutter },
   section: { paddingTop: th.space[4], paddingBottom: th.space[1] },
   sheetGap: { gap: th.space[3] },
@@ -194,46 +200,44 @@ export function ListScreen() {
   return (
     <View style={[s.root, { paddingTop: insets.top }]}>
       <View style={s.head}>
-        <View style={s.titleRow}>
-          <Text variant="largeTitle" accessibilityRole="header">
-            {t('items.title')}
-          </Text>
-          <View style={s.tools}>
-            <IconButton
-              testID="list-search-toggle"
-              icon={Search}
-              label={t('items.search')}
-              onPress={() => {
-                if (showSearch) list.setQuery('');
-                setShowSearch((v) => !v);
-              }}
-            />
-            <IconButton
-              icon={ArrowUpDown}
-              label={t('items.sort')}
-              onPress={() => setSortSheet(true)}
-            />
-            <IconButton
-              testID="home-trash"
-              icon={Trash2}
-              label={t('items.trash')}
-              onPress={() => nav.push('/trash')}
-            />
-            <IconButton
-              testID="home-lock"
-              icon={Lock}
-              label={t('items.lock')}
-              onPress={() => void core.lock()}
-            />
-            <IconButton
-              testID="home-add"
-              icon={Plus}
-              tone="accent"
-              label={t('items.add')}
-              onPress={() => nav.push('/item/new')}
-            />
-          </View>
+        <View style={s.tools}>
+          <IconButton
+            testID="list-search-toggle"
+            icon={Search}
+            label={t('items.search')}
+            onPress={() => {
+              if (showSearch) list.setQuery('');
+              setShowSearch((v) => !v);
+            }}
+          />
+          <IconButton
+            icon={ArrowUpDown}
+            label={t('items.sort')}
+            onPress={() => setSortSheet(true)}
+          />
+          <IconButton
+            testID="home-trash"
+            icon={Trash2}
+            label={t('items.trash')}
+            onPress={() => nav.push('/trash')}
+          />
+          <IconButton
+            testID="home-lock"
+            icon={Lock}
+            label={t('items.lock')}
+            onPress={() => void core.lock()}
+          />
+          <IconButton
+            testID="home-add"
+            icon={Plus}
+            tone="accent"
+            label={t('items.add')}
+            onPress={() => nav.push('/item/new')}
+          />
         </View>
+        <Text variant="largeTitle" accessibilityRole="header">
+          {t('items.title')}
+        </Text>
       </View>
       {header}
       <View style={{ flex: 1 }}>{body}</View>
