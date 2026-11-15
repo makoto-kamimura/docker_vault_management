@@ -1,0 +1,141 @@
+# LocalVault 本番構成。
+#   docker compose -f platform/docker/compose.yml --env-file platform/env/.env up -d
+name: localvault
+
+x-hardened: &hardened
+  restart: unless-stopped
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: [ALL]
+
+# コンテナのログは json-file で 10 MB × 3 世代までに制限する（無制限に溜めない）。
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  db:
+    logging: *logging
+    <<: *hardened
+    image: postgres:16
+    # initdb が chown/gosu を使うため必要最小限だけ戻す
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER, SETGID, SETUID]
+    environment:
+      POSTGRES_USER: localvault
+      POSTGRES_DB: localvault
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks: [data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U localvault -d localvault"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  app:
+    logging: *logging
+    <<: *hardened
+    image: localvault/server:latest
+    build:
+      context: ../..
+      dockerfile: platform/docker/server.Dockerfile
+    # 秘密ファイルは 0600（ホストのユーザー所有）なので同じ UID で動かす。
+    user: "${LV_UID:-65532}:${LV_GID:-65532}"
+    read_only: true
+    tmpfs: ["/tmp"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL_FILE: /run/secrets/database_url
+      TOKEN_SECRET_FILE: /run/secrets/token_secret
+      PRELOGIN_SECRET_FILE: /run/secrets/prelogin_secret
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:?PUBLIC_ORIGIN を platform/env/.env に設定してください}
+      REGISTRATION_MODE: ${REGISTRATION_MODE:-invite}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      TRUST_PROXY: "1"
+      APNS_KEY_ID: ${APNS_KEY_ID:-}
+      APNS_TEAM_ID: ${APNS_TEAM_ID:-}
+      APNS_KEY_P8_FILE: /run/secrets/apns_key_p8
+      APNS_TOPIC: ${APNS_TOPIC:-}
+      APNS_PRODUCTION: ${APNS_PRODUCTION:-true}
+      FCM_SERVICE_ACCOUNT_JSON_FILE: /run/secrets/fcm_service_account
+    secrets: [database_url, token_secret, prelogin_secret, apns_key_p8, fcm_service_account]
+    networks: [edge, data]
+
+  caddy:
+    logging: *logging
+    <<: *hardened
+    image: caddy:2
+    cap_add: [NET_BIND_SERVICE]
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      LV_DOMAIN: ${LV_DOMAIN:?LV_DOMAIN を platform/env/.env に設定してください}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks: [edge]
+
+  backup:
+    logging: *logging
+    <<: *hardened
+    image: postgres:16
+    entrypoint: ["/bin/bash", "/backup/backup.sh"]
+    user: "${LV_UID:-65532}:${LV_GID:-65532}"
+    read_only: true
+    tmpfs: ["/tmp"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      BACKUP_HOUR_UTC: ${BACKUP_HOUR_UTC:-18}
+      BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS:-14}
+      BACKUP_ON_START: ${BACKUP_ON_START:-0}
+    secrets: [db_password, backup_passphrase]
+    volumes:
+      - ./backup/backup.sh:/backup/backup.sh:ro
+      - ../backups:/backups
+    networks: [data]
+
+networks:
+  edge: {}
+  data:
+    internal: true
+
+volumes:
+  pgdata: {}
+  caddy_data: {}
+  caddy_config: {}
+
+secrets:
+  db_password:
+    file: ../secrets/db_password
+  database_url:
+    file: ../secrets/database_url
+  token_secret:
+    file: ../secrets/token_secret
+  prelogin_secret:
+    file: ../secrets/prelogin_secret
+  # 任意。空ファイルならバックアップは暗号化されない。
+  # 暗号化する場合は .env の LV_BACKUP_PASSPHRASE_FILE にパスを設定する。
+  backup_passphrase:
+    file: ${LV_BACKUP_PASSPHRASE_FILE:-../secrets/.gitkeep}
+  # 任意。プッシュ通知を使うときだけ、.env の LV_APNS_KEY_P8_FILE（APNs の .p8 鍵）と
+  # LV_FCM_SERVICE_ACCOUNT_FILE（FCM のサービスアカウント JSON）にパスを設定する。
+  # 未設定なら空ファイルが渡り、サーバーはその送信先を無効として扱う。
+  apns_key_p8:
+    file: ${LV_APNS_KEY_P8_FILE:-../secrets/.gitkeep}
+  fcm_service_account:
+    file: ${LV_FCM_SERVICE_ACCOUNT_FILE:-../secrets/.gitkeep}

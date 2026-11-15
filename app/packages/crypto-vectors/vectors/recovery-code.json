@@ -1,0 +1,94 @@
+{
+  "description": "Spec 8.11.1 derivations and 8.11.2 text format (52 data + 2 check chars, 9 groups of 6).",
+  "textCases": [
+    {
+      "rcHex": "0000000000000000000000000000000000000000000000000000000000000000",
+      "text": "LVRC-000000-000000-000000-000000-000000-000000-000000-000000-0000CS",
+      "checkChars": "CS"
+    },
+    {
+      "rcHex": "6f9499f9a21b770f6b94dca23c90a30f8a77efa642c8be56f446fdfac50274f9",
+      "text": "LVRC-DYA9KY-D23DVG-YTWMVJ-H3S453-1Y57FV-X68B4B-WNQM8V-YZNH82-EKWGVG",
+      "checkChars": "VG"
+    },
+    {
+      "rcHex": "cbf09ee1fa5d7d90e74f2a6fc61532eb0b9a5925f2701d202fcd9486eadf80e2",
+      "text": "LVRC-SFR9XR-FTBNYS-1STF59-QWC59J-XC5SMP-95Y9R1-T81FSP-A8DTPZ-G3H0VN",
+      "checkChars": "VN"
+    }
+  ],
+  "lenientValid": [
+    {
+      "input": "lvrc-dya9ky-d23dvg-ytwmvj-h3s453-1y57fv-x68b4b-wnqm8v-yznh82-ekwgvg",
+      "rcHex": "6f9499f9a21b770f6b94dca23c90a30f8a77efa642c8be56f446fdfac50274f9"
+    },
+    {
+      "input": "LVRC DYA9KY D23DVG YTWMVJ H3S453 1Y57FV X68B4B WNQM8V YZNH82 EKWGVG",
+      "rcHex": "6f9499f9a21b770f6b94dca23c90a30f8a77efa642c8be56f446fdfac50274f9"
+    },
+    {
+      "input": "DYA9KYD23DVGYTWMVJH3S4531Y57FVX68B4BWNQM8VYZNH82EKWGVG",
+      "rcHex": "6f9499f9a21b770f6b94dca23c90a30f8a77efa642c8be56f446fdfac50274f9"
+    },
+    {
+      "input": "LVRC-DYA9KY-D23DVG-YTWMVJ-H3S453-lY57FV-X68B4B-WNQM8V-YZNH82-EKWGVG",
+      "rcHex": "6f9499f9a21b770f6b94dca23c90a30f8a77efa642c8be56f446fdfac50274f9"
+    }
+  ],
+  "invalid": [
+    {
+      "name": "wrong check characters",
+      "input": "DYA9KYD23DVGYTWMVJH3S4531Y57FVX68B4BWNQM8VYZNH82EKWGVA"
+    },
+    {
+      "name": "typo in data",
+      "input": "DYA9KYD23DAGYTWMVJH3S4531Y57FVX68B4BWNQM8VYZNH82EKWGVG"
+    },
+    {
+      "name": "too short",
+      "input": "YA9KYD23DVGYTWMVJH3S4531Y57FVX68B4BWNQM8VYZNH82EKWGVG"
+    },
+    {
+      "name": "empty",
+      "input": ""
+    }
+  ],
+  "derivation": {
+    "rcHex": "6f9499f9a21b770f6b94dca23c90a30f8a77efa642c8be56f446fdfac50274f9",
+    "accountId": "5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f",
+    "vkHex": "ec883fd6d4ad1ea2090ac77650fffb468e776d673ff7bb00d5ef5028d6b848c4",
+    "vkVersion": 2,
+    "rcIdHex": "3d2f5a78a8afcbdba274cdb24df3f047",
+    "kekRCHex": "acb02037463d8061d8390dcc7e3bed5513033edf638d8e3d6a51a3ec284b6e70",
+    "authRCHex": "892419db6a79a8f86b3d137ef91df4636c000e0746684ec68efe21e09b68afb1",
+    "aad": "lv|v2|rc|5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f|PS9aeKivy9uidM2yTfPwRw|2",
+    "wrapNonceHex": "ec21d67ce91cf3ba8d4546fc",
+    "registration": {
+      "rcId": "PS9aeKivy9uidM2yTfPwRw",
+      "wrappedVK": {
+        "nonce": "7CHWfOkc87qNRUb8",
+        "ct": "RsmQ2bZ9SgSBYDFrHOwFNOlh6hAzyu0x38nsxOQH0YIjK0SnYDJnH72USMKRPCM6"
+      },
+      "verifier": "HYnAm0DzNea6-hO1gpExK-fFOqZY5DVLRmGXdwYwov8",
+      "vkVersion": 2
+    }
+  },
+  "negative": [
+    {
+      "name": "wrong vkVersion in AAD",
+      "vkVersion": 3,
+      "wrappedVK": {
+        "nonce": "7CHWfOkc87qNRUb8",
+        "ct": "RsmQ2bZ9SgSBYDFrHOwFNOlh6hAzyu0x38nsxOQH0YIjK0SnYDJnH72USMKRPCM6"
+      }
+    },
+    {
+      "name": "tampered tag",
+      "vkVersion": 2,
+      "wrappedVK": {
+        "nonce": "7CHWfOkc87qNRUb8",
+        "ct": "RsmQ2bZ9SgSBYDFrHOwFNOlh6hAzyu0x38nsxOQH0YIjK0SnYDJnH72USMKRPCM7"
+      }
+    }
+  ]
+}

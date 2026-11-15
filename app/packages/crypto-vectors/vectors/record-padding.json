@@ -1,0 +1,57 @@
+{
+  "description": "ciphertextBytes = paddedByteLength + 16 (GCM tag). Record = login with notes of N ASCII chars.",
+  "vkHex": "1186bd43f6d71bb7a06a74cec75d0488ed5234c2e80017b8ca6da58973d00d44",
+  "accountId": "5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f",
+  "recordId": "8c3f5d21-a06e-4f4d-b112-4d5e6f708192",
+  "nonceHex": "ecab571b51db4d9766041ad7",
+  "cases": [
+    {
+      "notesLength": 0,
+      "jsonByteLength": 397,
+      "paddedByteLength": 512,
+      "ciphertextBytes": 528
+    },
+    {
+      "notesLength": 1,
+      "jsonByteLength": 398,
+      "paddedByteLength": 512,
+      "ciphertextBytes": 528
+    },
+    {
+      "notesLength": 100,
+      "jsonByteLength": 497,
+      "paddedByteLength": 512,
+      "ciphertextBytes": 528
+    },
+    {
+      "notesLength": 150,
+      "jsonByteLength": 547,
+      "paddedByteLength": 768,
+      "ciphertextBytes": 784
+    },
+    {
+      "notesLength": 200,
+      "jsonByteLength": 597,
+      "paddedByteLength": 768,
+      "ciphertextBytes": 784
+    },
+    {
+      "notesLength": 300,
+      "jsonByteLength": 697,
+      "paddedByteLength": 768,
+      "ciphertextBytes": 784
+    },
+    {
+      "notesLength": 600,
+      "jsonByteLength": 997,
+      "paddedByteLength": 1024,
+      "ciphertextBytes": 1040
+    },
+    {
+      "notesLength": 1000,
+      "jsonByteLength": 1397,
+      "paddedByteLength": 1536,
+      "ciphertextBytes": 1552
+    }
+  ]
+}

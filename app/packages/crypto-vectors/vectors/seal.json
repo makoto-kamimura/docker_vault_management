@@ -1,0 +1,98 @@
+{
+  "description": "Spec 8.5. salt = SHA-256(S || R), info = \"localvault/v2/seal|\" + ctx, nonce given.",
+  "recipientPrivateKeyHex": "ae00de07bbaf937b9248af86dd73d13a44a2e7b93ad566aaa263b29b963bd4f3",
+  "recipientPublicKeyHex": "047b99998ce6373f7d2eb46f9397adb3cf4d8c075e0bb0c4cde5536edbe7cf2d8271bc2c3b846937c5092451f97106908a0209204f61bc073a8cd27557562334e8",
+  "cases": [
+    {
+      "name": "pairing",
+      "ctx": "pair|8c3f5d21-a06e-4f4d-b112-4d5e6f708192",
+      "hkdfInfo": "localvault/v2/seal|pair|8c3f5d21-a06e-4f4d-b112-4d5e6f708192",
+      "aad": "lv|v2|seal|pair|8c3f5d21-a06e-4f4d-b112-4d5e6f708192",
+      "senderPrivateKeyHex": "d4c52a1e83813ff851db86d6a8278df93d34b8646f23ec1ec9c095508faf9d33",
+      "senderPublicKeyHex": "049e93075102db07e76e8eabb465849f6198e5f2e2c448659289c0fdea3fd7a841e3b1a166b6492e483938571b6dcd494867edbe9e3b8661407d0d0b699927532a",
+      "nonceHex": "0c25c805131bfd9376d83c17",
+      "plaintext": {
+        "vk": "iCmAUo8lYVxd43yXdnmH4z8S4oPaqURl1g64dtVADtc",
+        "vkVersion": 1,
+        "sessionMaxSec": 3600,
+        "issuedAt": "2026-11-11T09:00:00.000Z"
+      },
+      "plaintextJson": "{\"vk\":\"iCmAUo8lYVxd43yXdnmH4z8S4oPaqURl1g64dtVADtc\",\"vkVersion\":1,\"sessionMaxSec\":3600,\"issuedAt\":\"2026-11-11T09:00:00.000Z\"}",
+      "intermediates": {
+        "sharedXHex": "b256980725b274ba5180c0bc408e509fd525de96e29018092bb9ecb18b18909a",
+        "saltHex": "346a0db885b4263927a12563dfcde9873bd86caad97ee77070fb401da6e954f0",
+        "keyHex": "f6ba68dbea11678ea102f0256b2834ce683f9b9d763bd344a756bd12e9018b42"
+      },
+      "envelope": {
+        "epk": "BJ6TB1EC2wfnbo6rtGWEn2GY5fLixEhlkonA_eo_16hB47GhZrZJLkg5OFcbbc1JSGftvp47hmFAfQ0LaZknUyo",
+        "nonce": "DCXIBRMb_ZN22DwX",
+        "ct": "DnO2VHLCUCNbGsFAiv0Pxp77A5SJI0vcy8ARzRBViUsyikGwbPxayLEfsLypBl4N2kiASZzIqQfcpWzopcACLOLV63sG21apkdGFzkpvlcLdeo8Urk6dnXNOU4JTc-QR-iSWc_A4qe4McdaLCwPucO9ijABjhmNAiOwxBsQhluerseeHds1TK5_gPqUy"
+      }
+    },
+    {
+      "name": "unlock",
+      "ctx": "unlock|9d4a6e32-b17f-4a5e-8223-5e6f708192a3",
+      "hkdfInfo": "localvault/v2/seal|unlock|9d4a6e32-b17f-4a5e-8223-5e6f708192a3",
+      "aad": "lv|v2|seal|unlock|9d4a6e32-b17f-4a5e-8223-5e6f708192a3",
+      "senderPrivateKeyHex": "402f61783ae1a022cab87e5765054f8da86e6cf6738d8de78109aaba719eb1db",
+      "senderPublicKeyHex": "0465ef6e147f9e0fae1536ef5d5147d9a02175274894a4b41aa09756fcb6612f3863e656cc911de068e36765c42e6d5d86fcb490f0ccb27b602c940bd9ce9083f0",
+      "nonceHex": "54a586adb880059d0145da20",
+      "plaintext": {
+        "vk": "iCmAUo8lYVxd43yXdnmH4z8S4oPaqURl1g64dtVADtc",
+        "vkVersion": 1,
+        "sessionMaxSec": 3600,
+        "issuedAt": "2026-11-11T09:00:00.000Z"
+      },
+      "plaintextJson": "{\"vk\":\"iCmAUo8lYVxd43yXdnmH4z8S4oPaqURl1g64dtVADtc\",\"vkVersion\":1,\"sessionMaxSec\":3600,\"issuedAt\":\"2026-11-11T09:00:00.000Z\"}",
+      "intermediates": {
+        "sharedXHex": "513f75ff3736b4fac1d4c389d26b812d961c940f3423eecdc987e17c4455497a",
+        "saltHex": "6f862334ca930f311518f47485b16bc13f5b229530b735566b9c9fe3185823a8",
+        "keyHex": "29a457678b79dd2a6dc38e0f263424f5079f83e979cad73095e4e1719cf6a7d8"
+      },
+      "envelope": {
+        "epk": "BGXvbhR_ng-uFTbvXVFH2aAhdSdIlKS0GqCXVvy2YS84Y-ZWzJEd4GjjZ2XELm1dhvy0kPDMsntgLJQL2c6Qg_A",
+        "nonce": "VKWGrbiABZ0BRdog",
+        "ct": "x5ljVxYXqZ_TxnYEnUvEYV_2BvAk23SD8FiK16uXlDfRPrxgZ4NnWspK1URE8jaCqHRrSA8za3KGuirucoJEfkfvQkzXqvUWopEovR-Ep4ysvTJTPWO0t0DYZP4kvsglesgxCYyf-VQCRqgt7DNHwab5LcyZhlVkG4M3xhDBZZRTrS5ycaDEdnqJaY-5"
+      }
+    }
+  ],
+  "negative": [
+    {
+      "name": "wrong context",
+      "ctx": "unlock|8c3f5d21-a06e-4f4d-b112-4d5e6f708192",
+      "envelope": {
+        "epk": "BJ6TB1EC2wfnbo6rtGWEn2GY5fLixEhlkonA_eo_16hB47GhZrZJLkg5OFcbbc1JSGftvp47hmFAfQ0LaZknUyo",
+        "nonce": "DCXIBRMb_ZN22DwX",
+        "ct": "DnO2VHLCUCNbGsFAiv0Pxp77A5SJI0vcy8ARzRBViUsyikGwbPxayLEfsLypBl4N2kiASZzIqQfcpWzopcACLOLV63sG21apkdGFzkpvlcLdeo8Urk6dnXNOU4JTc-QR-iSWc_A4qe4McdaLCwPucO9ijABjhmNAiOwxBsQhluerseeHds1TK5_gPqUy"
+      }
+    },
+    {
+      "name": "tampered ciphertext",
+      "ctx": "pair|8c3f5d21-a06e-4f4d-b112-4d5e6f708192",
+      "envelope": {
+        "epk": "BJ6TB1EC2wfnbo6rtGWEn2GY5fLixEhlkonA_eo_16hB47GhZrZJLkg5OFcbbc1JSGftvp47hmFAfQ0LaZknUyo",
+        "nonce": "DCXIBRMb_ZN22DwX",
+        "ct": "D3O2VHLCUCNbGsFAiv0Pxp77A5SJI0vcy8ARzRBViUsyikGwbPxayLEfsLypBl4N2kiASZzIqQfcpWzopcACLOLV63sG21apkdGFzkpvlcLdeo8Urk6dnXNOU4JTc-QR-iSWc_A4qe4McdaLCwPucO9ijABjhmNAiOwxBsQhluerseeHds1TK5_gPqUy"
+      }
+    },
+    {
+      "name": "tampered tag",
+      "ctx": "pair|8c3f5d21-a06e-4f4d-b112-4d5e6f708192",
+      "envelope": {
+        "epk": "BJ6TB1EC2wfnbo6rtGWEn2GY5fLixEhlkonA_eo_16hB47GhZrZJLkg5OFcbbc1JSGftvp47hmFAfQ0LaZknUyo",
+        "nonce": "DCXIBRMb_ZN22DwX",
+        "ct": "DnO2VHLCUCNbGsFAiv0Pxp77A5SJI0vcy8ARzRBViUsyikGwbPxayLEfsLypBl4N2kiASZzIqQfcpWzopcACLOLV63sG21apkdGFzkpvlcLdeo8Urk6dnXNOU4JTc-QR-iSWc_A4qe4McdaLCwPucO9ijABjhmNAiOwxBsQhluerseeHds1TK5_gPqUz"
+      }
+    },
+    {
+      "name": "wrong recipient key",
+      "ctx": "pair|8c3f5d21-a06e-4f4d-b112-4d5e6f708192",
+      "recipientPrivateKeyHex": "bc78bc0343acf3408433ef541adfbe629675b95e88390134fb7fdf87ac42f151",
+      "envelope": {
+        "epk": "BJ6TB1EC2wfnbo6rtGWEn2GY5fLixEhlkonA_eo_16hB47GhZrZJLkg5OFcbbc1JSGftvp47hmFAfQ0LaZknUyo",
+        "nonce": "DCXIBRMb_ZN22DwX",
+        "ct": "DnO2VHLCUCNbGsFAiv0Pxp77A5SJI0vcy8ARzRBViUsyikGwbPxayLEfsLypBl4N2kiASZzIqQfcpWzopcACLOLV63sG21apkdGFzkpvlcLdeo8Urk6dnXNOU4JTc-QR-iSWc_A4qe4McdaLCwPucO9ijABjhmNAiOwxBsQhluerseeHds1TK5_gPqUy"
+      }
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "description": "wrappedVK = AES-256-GCM(KEK, VK, AAD). Negative cases must fail to unwrap.",
+  "kekHex": "215c52d86656c25e0e68a560553b528c7b03cc127d3cdf8274f056a158dbbc52",
+  "vkHex": "92a530880f97ae298c44232acbe01e4f0d02db27b6f7d270354c3ad3c720ab72",
+  "accountId": "5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f",
+  "keysetVersion": 3,
+  "aad": "lv|v2|vk|5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f|3",
+  "nonceHex": "c8399ce8204f9613ed56a325",
+  "wrappedVK": {
+    "nonce": "yDmc6CBPlhPtVqMl",
+    "ct": "lKqHWPTWA34E4i2GGwKimvF9GNPnbm3EBlFA0aiHqtnY1usDjF6ZVfvQLTOhzHTP"
+  },
+  "negative": [
+    {
+      "name": "wrong keysetVersion in AAD",
+      "accountId": "5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f",
+      "keysetVersion": 4,
+      "wrappedVK": {
+        "nonce": "yDmc6CBPlhPtVqMl",
+        "ct": "lKqHWPTWA34E4i2GGwKimvF9GNPnbm3EBlFA0aiHqtnY1usDjF6ZVfvQLTOhzHTP"
+      }
+    },
+    {
+      "name": "wrong accountId in AAD",
+      "accountId": "6a1d3b0f-8e4c-4d2b-8f90-2b3c4d5e6f70",
+      "keysetVersion": 3,
+      "wrappedVK": {
+        "nonce": "yDmc6CBPlhPtVqMl",
+        "ct": "lKqHWPTWA34E4i2GGwKimvF9GNPnbm3EBlFA0aiHqtnY1usDjF6ZVfvQLTOhzHTP"
+      }
+    },
+    {
+      "name": "tampered tag",
+      "accountId": "5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f",
+      "keysetVersion": 3,
+      "wrappedVK": {
+        "nonce": "yDmc6CBPlhPtVqMl",
+        "ct": "lKqHWPTWA34E4i2GGwKimvF9GNPnbm3EBlFA0aiHqtnY1usDjF6ZVfvQLTOhzHTO"
+      }
+    },
+    {
+      "name": "tampered ciphertext",
+      "accountId": "5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f",
+      "keysetVersion": 3,
+      "wrappedVK": {
+        "nonce": "yDmc6CBPlhPtVqMl",
+        "ct": "laqHWPTWA34E4i2GGwKimvF9GNPnbm3EBlFA0aiHqtnY1usDjF6ZVfvQLTOhzHTP"
+      }
+    },
+    {
+      "name": "tampered nonce",
+      "accountId": "5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f",
+      "keysetVersion": 3,
+      "wrappedVK": {
+        "nonce": "yTmc6CBPlhPtVqMl",
+        "ct": "lKqHWPTWA34E4i2GGwKimvF9GNPnbm3EBlFA0aiHqtnY1usDjF6ZVfvQLTOhzHTP"
+      }
+    }
+  ]
+}

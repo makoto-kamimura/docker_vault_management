@@ -1,0 +1,134 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: var(
+    --lv-font-sans,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    "Hiragino Sans",
+    "Yu Gothic UI",
+    sans-serif
+  );
+  font-size: 14px;
+  line-height: 1.5;
+  background: var(--lv-color-bg);
+  color: var(--lv-color-text);
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+:focus-visible {
+  outline: 2px solid var(--lv-color-focus-ring);
+  outline-offset: 2px;
+}
+.lv-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 16px;
+  border-radius: var(--lv-radius-md, 10px);
+  border: 1px solid var(--lv-color-border-strong);
+  background: var(--lv-color-surface);
+  cursor: pointer;
+}
+.lv-btn:hover {
+  background: var(--lv-color-bg-sunken);
+}
+.lv-btn.primary {
+  background: var(--lv-color-accent);
+  border-color: var(--lv-color-accent);
+  color: var(--lv-color-on-accent);
+  font-weight: 600;
+}
+.lv-btn.primary:hover {
+  background: var(--lv-color-accent-pressed);
+}
+.lv-btn.danger {
+  border-color: var(--lv-color-danger);
+  color: var(--lv-color-danger);
+}
+.lv-btn.small {
+  min-height: 32px;
+  padding: 4px 10px;
+  font-size: 12px;
+}
+.lv-btn[disabled] {
+  opacity: 0.55;
+  cursor: default;
+}
+.lv-input {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: var(--lv-radius-md, 10px);
+  border: 1px solid var(--lv-color-border-strong);
+  background: var(--lv-color-surface);
+}
+.lv-muted {
+  color: var(--lv-color-text-secondary);
+}
+.lv-small {
+  font-size: 12px;
+}
+.lv-card {
+  background: var(--lv-color-surface);
+  border: 1px solid var(--lv-color-border);
+  border-radius: var(--lv-radius-lg, 14px);
+  padding: 16px;
+}
+.lv-banner {
+  padding: 12px;
+  border-radius: var(--lv-radius-md, 10px);
+  border: 1px solid var(--lv-color-warning);
+  background: var(--lv-color-bg-sunken);
+}
+.lv-banner.danger {
+  border-color: var(--lv-color-danger);
+  background: var(--lv-color-danger-subtle);
+}
+.lv-code {
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--lv-color-accent);
+}
+.lv-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.lv-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lv-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

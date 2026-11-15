@@ -1,0 +1,118 @@
+{
+  "description": "Primitive-level vectors. All binary values are lower-case hex.",
+  "sha256": [
+    {
+      "messageUtf8": "",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "messageUtf8": "abc",
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    {
+      "messageUtf8": "LocalVault",
+      "sha256": "5f20fc6b75c5fbca002d3e09721e7204cd51b15eec03d975c792d8b7fa307ce9"
+    }
+  ],
+  "hmacSha256": [
+    {
+      "keyHex": "de850d4c29fe91d66e9198a2838790a78b2faaed",
+      "messageUtf8": "what do ya want for nothing?",
+      "mac": "e2c3b31a3774288b034cb5707b399c8a61cf1284352a8177d8e089d0a1a94664"
+    }
+  ],
+  "hkdfSha256": [
+    {
+      "ikmHex": "465093f403490229ec3f5053b61717ba0777a81ce7143e245c0e35ffd8be18d1aab56965bec3048d3b9d23181797cd9c",
+      "saltHex": "49b0ffce6f1ee9e52ddedc602cddf3a7",
+      "infoUtf8": "localvault/v2/test",
+      "length": 42,
+      "okmHex": "3cae338ecb48fc98599e02c7890d478d0172e9939c3573b663abc77c397d05d28cd22e8b465c3f3e9038"
+    }
+  ],
+  "pbkdf2Sha256": [
+    {
+      "passwordUtf8": "password",
+      "saltHex": "d1d2957fab0d8bf9faa15fd3afc9ef26",
+      "iterations": 1,
+      "length": 32,
+      "dkHex": "289f7363fe446480c2b3926bf8f2c06b15ad00177b344bfe212e55fa1e498594"
+    },
+    {
+      "passwordUtf8": "パスワード",
+      "saltHex": "3af33f9b285a6e34f5b58cd57b511e26",
+      "iterations": 4096,
+      "length": 32,
+      "dkHex": "64740dc97a55055cca3ad5901e81e935de60716698d8e8971e64962069af3d27"
+    }
+  ],
+  "aesGcm": [
+    {
+      "name": "empty plaintext, empty aad",
+      "keyHex": "07ee38cf607c83a7c0794504dae7fb6b1be38a2eefd30d5c34d75c081417017d",
+      "nonceHex": "27561bb4d3f6e2b74f551331",
+      "aadHex": "",
+      "plaintextHex": "",
+      "ciphertextAndTagHex": "fa6dce4b85586a803dbb59bc9242d15f"
+    },
+    {
+      "name": "text with aad",
+      "keyHex": "07ee38cf607c83a7c0794504dae7fb6b1be38a2eefd30d5c34d75c081417017d",
+      "nonceHex": "3b5c6dc989fc396374a0b859",
+      "aadHex": "6c767c76327c74657374",
+      "plaintextHex": "68656c6c6f206c6f63616c7661756c74",
+      "ciphertextAndTagHex": "e8fed7ba8b7345f48a7242b5147f49c75fe1ab5fd014cd164f61338196c3d671"
+    }
+  ],
+  "ecdh": [
+    {
+      "privateKeyAHex": "a59056f63e389fd349ef77f754743cc3863c463ac5a1b2bbc26faef6f16c49e3",
+      "publicKeyAHex": "0447c605c93625e9c1c27e6789ed9f6287d6a56e58fb25b73e2f14b3ec500f38f5cfc74d5acdbb2e1b52945fc2944d6540b1b298800906c4c711f8abdeeebc68cf",
+      "privateKeyBHex": "decfbfac01f04f3eee7780a87192cfc3d439d54b9ba9d66f50afd12058a73b2f",
+      "publicKeyBHex": "040c7e91dcf8193b9e2f0f377556e5b1ab7ea7cab2a137d240db120ea1ca03c14939ad485adaf9f44fb57162395fa9ec114819050ba1e9646dc1da9274caa39a63",
+      "sharedXHex": "9f4e1c07badfe7e3c96d0afc634c8704a8d4cfd2cd44b6ae8eda5d31ccea0b78"
+    }
+  ],
+  "ecdsaVerify": {
+    "publicKeyHex": "045497b406e8b29a155ead62627359824bc62b314b87327ba1431536f386907d7f82a944f52f1696921459ca6acef23931b42777c9d8c1f2ec0489773e110d84c2",
+    "messageHex": "6563647361207072696d6974697665206d657373616765",
+    "valid": [
+      {
+        "name": "low-S",
+        "signatureHex": "8c79effdef544732721e45569999d8c760564eed9feda57f9130d448dc0977356f83d7d0982d52071a1d5b62d662a9edeed632c0256b0b2195852c3a6e463778"
+      },
+      {
+        "name": "high-S",
+        "signatureHex": "8c79effdef544732721e45569999d8c760564eed9feda57f9130d448dc097735907c282e67d2adf9e5e2a49d299d5611ce10c7ed81ac93635e349e888e1cedd9"
+      }
+    ],
+    "invalid": [
+      {
+        "name": "flipped bit in r",
+        "signatureHex": "8d79effdef544732721e45569999d8c760564eed9feda57f9130d448dc0977356f83d7d0982d52071a1d5b62d662a9edeed632c0256b0b2195852c3a6e463778"
+      },
+      {
+        "name": "wrong length (63 bytes)",
+        "signatureHex": "8c79effdef544732721e45569999d8c760564eed9feda57f9130d448dc0977356f83d7d0982d52071a1d5b62d662a9edeed632c0256b0b2195852c3a6e4637"
+      },
+      {
+        "name": "zero signature",
+        "signatureHex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "name": "DER instead of P1363",
+        "signatureHex": "30448c79effdef544732721e45569999d8c760564eed9feda57f9130d448dc0977356f83d7d0982d52071a1d5b62d662a9edeed632c0256b0b2195852c3a6e463778"
+      }
+    ],
+    "invalidPublicKeys": [
+      {
+        "name": "point not on curve",
+        "publicKeyHex": "045497b406e8b29a155ead62627359824bc62b314b87327ba1431536f386907d7f82a944f52f1696921459ca6acef23931b42777c9d8c1f2ec0489773e110d84c3"
+      },
+      {
+        "name": "compressed encoding",
+        "publicKeyHex": "045497b406e8b29a155ead62627359824bc62b314b87327ba1431536f386907d7f"
+      }
+    ]
+  }
+}

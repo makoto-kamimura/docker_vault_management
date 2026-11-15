@@ -1,0 +1,23 @@
+{
+  "name": "@localvault/crypto-vectors",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./vectors/*": "./vectors/*"
+  },
+  "scripts": {
+    "generate": "tsx scripts/generate.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@localvault/core": "workspace:*",
+    "@localvault/protocol": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0",
+    "vitest": "^5.1.0"
+  }
+}

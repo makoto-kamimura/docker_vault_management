@@ -1,0 +1,125 @@
+{
+  "description": "Spec 6.5. Random draw order: kdf salt, file key, wrappedKey nonce, payload nonce. Key = PBKDF2(NFKC(password)).",
+  "exportPasswordUtf8": "export-passphrase 日本語",
+  "aadKey": "lv-export|1|key",
+  "aadPayload": "lv-export|1|payload",
+  "saltHex": "e3b3579ef62daad1334a48b4fb6d00c4",
+  "fileKeyHex": "6a9230fa4255e79123694723b0c7c36527708eec4f87b5c1b2634d7e9e1f023c",
+  "keyNonceHex": "dc99a8e8b2e7adbdeb988a53",
+  "payloadNonceHex": "3d0f46be88a3afdc72dcfc89",
+  "payload": {
+    "items": [
+      {
+        "id": "8c3f5d21-a06e-4f4d-b112-4d5e6f708192",
+        "data": {
+          "title": "GitHub",
+          "username": "alice@example.com",
+          "password": "p@ss-Wörd-日本語",
+          "urls": [
+            {
+              "url": "https://github.com/login",
+              "match": "domain"
+            }
+          ],
+          "androidApps": [],
+          "notes": "",
+          "favorite": true,
+          "createdAt": "2026-11-01T09:00:00.000Z",
+          "trashedAt": null,
+          "conflictOf": null,
+          "passwordHistory": []
+        },
+        "updatedAt": "2026-11-02T09:00:00.000Z"
+      }
+    ]
+  },
+  "file": {
+    "format": "localvault-export",
+    "version": 1,
+    "exportedAt": "2026-11-12T09:00:00.000Z",
+    "kdf": {
+      "alg": "PBKDF2-HMAC-SHA256",
+      "iterations": 600000,
+      "salt": "47NXnvYtqtEzSki0-20AxA"
+    },
+    "wrappedKey": {
+      "nonce": "3Jmo6LLnrb3rmIpT",
+      "ct": "tIDGsJh2zVSFWDvsiyx4hIGYhcpyp6EJWYZ0NiSPu9a__6BNPDN-W78Yfub-plll"
+    },
+    "payload": {
+      "nonce": "PQ9Gvoijr9xy3PyJ",
+      "ct": "h4Bo_hyCG75D7To6b5salGehArGbVWR0D1T1PoMfkQLPdbWImaowVDj7otxKSja7-uQw61ksMNTGEsi7CRhG0Y_XlyRaY0dtPJEXxhnx6WKLTguLRNaTc7pHoukLnJ6BfPCIYEOvYStZGa-YV-dKagSP5aKVmSpRXdhpReOlraiOHD4axR4p5QAmcxKVFvaF9xN7fZaMfEmNovdscKOiKlD6XRK6W9w0uiR3_OHfxDt3wUwxBX8ixBJ_jTnrQXN4LMJeUFgOLFgBubTDtK1L7gWitDA74pQl57hfHzHpPOchdKvXYIatmgQZtP2EkMMtXJvQxnyTvcd-iuB7-OEkoleZ2nbJG2zC_XFIK_Mdjt0EyOkzDRzMi2MS_rhrWgZSzzWG5ljNSerPswjC5bq65Fm65Efyg4qPZXEbewvXBCmkzOPMKRbPStkmPICtLJR5DB1q_SPkEtDhiW4-KQEU0sxfkZJPd6EofeslAq5S5mHBHEZ3jQbgJc9usrL-vXc-szNq021IRTmnfM-Ah4uBzvTbvg"
+    }
+  },
+  "negative": [
+    {
+      "name": "wrong password",
+      "passwordUtf8": "another-password-1",
+      "file": {
+        "format": "localvault-export",
+        "version": 1,
+        "exportedAt": "2026-11-12T09:00:00.000Z",
+        "kdf": {
+          "alg": "PBKDF2-HMAC-SHA256",
+          "iterations": 600000,
+          "salt": "47NXnvYtqtEzSki0-20AxA"
+        },
+        "wrappedKey": {
+          "nonce": "3Jmo6LLnrb3rmIpT",
+          "ct": "tIDGsJh2zVSFWDvsiyx4hIGYhcpyp6EJWYZ0NiSPu9a__6BNPDN-W78Yfub-plll"
+        },
+        "payload": {
+          "nonce": "PQ9Gvoijr9xy3PyJ",
+          "ct": "h4Bo_hyCG75D7To6b5salGehArGbVWR0D1T1PoMfkQLPdbWImaowVDj7otxKSja7-uQw61ksMNTGEsi7CRhG0Y_XlyRaY0dtPJEXxhnx6WKLTguLRNaTc7pHoukLnJ6BfPCIYEOvYStZGa-YV-dKagSP5aKVmSpRXdhpReOlraiOHD4axR4p5QAmcxKVFvaF9xN7fZaMfEmNovdscKOiKlD6XRK6W9w0uiR3_OHfxDt3wUwxBX8ixBJ_jTnrQXN4LMJeUFgOLFgBubTDtK1L7gWitDA74pQl57hfHzHpPOchdKvXYIatmgQZtP2EkMMtXJvQxnyTvcd-iuB7-OEkoleZ2nbJG2zC_XFIK_Mdjt0EyOkzDRzMi2MS_rhrWgZSzzWG5ljNSerPswjC5bq65Fm65Efyg4qPZXEbewvXBCmkzOPMKRbPStkmPICtLJR5DB1q_SPkEtDhiW4-KQEU0sxfkZJPd6EofeslAq5S5mHBHEZ3jQbgJc9usrL-vXc-szNq021IRTmnfM-Ah4uBzvTbvg"
+        }
+      },
+      "expectedError": "E_WRONG_PASSWORD"
+    },
+    {
+      "name": "tampered payload",
+      "passwordUtf8": "export-passphrase 日本語",
+      "file": {
+        "format": "localvault-export",
+        "version": 1,
+        "exportedAt": "2026-11-12T09:00:00.000Z",
+        "kdf": {
+          "alg": "PBKDF2-HMAC-SHA256",
+          "iterations": 600000,
+          "salt": "47NXnvYtqtEzSki0-20AxA"
+        },
+        "wrappedKey": {
+          "nonce": "3Jmo6LLnrb3rmIpT",
+          "ct": "tIDGsJh2zVSFWDvsiyx4hIGYhcpyp6EJWYZ0NiSPu9a__6BNPDN-W78Yfub-plll"
+        },
+        "payload": {
+          "nonce": "PQ9Gvoijr9xy3PyJ",
+          "ct": "h4Bo_hyCG75D7To6b5salGehArGbVWR0D1T1PoMfkQLPdbWImaowVDj7otxKSja7-uQw61ksMNTGEsi7CRhG0Y_XlyRaY0dtPJEXxhnx6WKLTguLRNaTc7pHoukLnJ6BfPCIYEOvYStZGa-YV-dKagSP5aKVmSpRXdhpReOlraiOHD4axR4p5QAmcxKVFvaF9xN7fZaMfEmNovdscKOiKlD6XRK6W9w0uiR3_OHfxDt3wUwxBX8ixBJ_jTnrQXN4LMJeUFgOLFgBubTDtK1L7gWitDA74pQl57hfHzHpPOchdKvXYIatmgQZtP2EkMMtXJvQxnyTvcd-iuB7-OEkoleZ2nbJG2zC_XFIK_Mdjt0EyOkzDRzMi2MS_rhrWgZSzzWG5ljNSerPswjC5bq65Fm65Efyg4qPZXEbewvXBCmkzOPMKRbPStkmPICtLJR5DB1q_SPkEtDhiW4-KQEU0sxfkZJPd6EofeslAq5S5mHBHEZ3jQbgJc9usrL-vXc-szNq021IRTmnfM-Ah4uBzvTbvw"
+        }
+      },
+      "expectedError": "E_IMPORT_FORMAT"
+    },
+    {
+      "name": "tampered wrappedKey",
+      "passwordUtf8": "export-passphrase 日本語",
+      "file": {
+        "format": "localvault-export",
+        "version": 1,
+        "exportedAt": "2026-11-12T09:00:00.000Z",
+        "kdf": {
+          "alg": "PBKDF2-HMAC-SHA256",
+          "iterations": 600000,
+          "salt": "47NXnvYtqtEzSki0-20AxA"
+        },
+        "wrappedKey": {
+          "nonce": "3Jmo6LLnrb3rmIpT",
+          "ct": "tIDGsJh2zVSFWDvsiyx4hIGYhcpyp6EJWYZ0NiSPu9a__6BNPDN-W78Yfub-pllk"
+        },
+        "payload": {
+          "nonce": "PQ9Gvoijr9xy3PyJ",
+          "ct": "h4Bo_hyCG75D7To6b5salGehArGbVWR0D1T1PoMfkQLPdbWImaowVDj7otxKSja7-uQw61ksMNTGEsi7CRhG0Y_XlyRaY0dtPJEXxhnx6WKLTguLRNaTc7pHoukLnJ6BfPCIYEOvYStZGa-YV-dKagSP5aKVmSpRXdhpReOlraiOHD4axR4p5QAmcxKVFvaF9xN7fZaMfEmNovdscKOiKlD6XRK6W9w0uiR3_OHfxDt3wUwxBX8ixBJ_jTnrQXN4LMJeUFgOLFgBubTDtK1L7gWitDA74pQl57hfHzHpPOchdKvXYIatmgQZtP2EkMMtXJvQxnyTvcd-iuB7-OEkoleZ2nbJG2zC_XFIK_Mdjt0EyOkzDRzMi2MS_rhrWgZSzzWG5ljNSerPswjC5bq65Fm65Efyg4qPZXEbewvXBCmkzOPMKRbPStkmPICtLJR5DB1q_SPkEtDhiW4-KQEU0sxfkZJPd6EofeslAq5S5mHBHEZ3jQbgJc9usrL-vXc-szNq021IRTmnfM-Ah4uBzvTbvg"
+        }
+      },
+      "expectedError": "E_WRONG_PASSWORD"
+    }
+  ]
+}

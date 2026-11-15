@@ -1,0 +1,25 @@
+{
+  "name": "@localvault/core",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./src/testing.ts",
+    "./psl-data": "./src/psl-data.ts"
+  },
+  "scripts": {
+    "build:psl": "node scripts/build-psl.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@localvault/protocol": "workspace:*",
+    "@noble/ciphers": "^2.4.0",
+    "@noble/curves": "^2.4.0",
+    "@noble/hashes": "^2.4.0"
+  },
+  "devDependencies": {
+    "vitest": "^5.1.0"
+  }
+}

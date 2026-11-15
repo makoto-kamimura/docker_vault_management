@@ -2,10 +2,10 @@
 
 | 項目 | 内容 |
 |---|---|
-| 文書バージョン | 0.3（ドラフト） |
+| 文書バージョン | 0.4（ドラフト） |
 | 作成日 | 2026-11-11 |
 | 想定読者 | 実装担当者（人、またはAIコーディングエージェント） |
-| 前版からの主な変更 | v0.3：復旧シートの QR だけで復元できる「復旧コード」（オプション、猶予期間付き）を追加（§8.11）。v0.2：自前サーバーへの暗号化同期、PC 用ブラウザ拡張（スマホの承認で解錠）、リカバリーキーと緊急キット、端末管理を追加。方針を「通信ゼロ」から「自前サーバー以外と通信せず、サーバーは中身を読めない」に変更 |
+| 前版からの主な変更 | v0.4：実装前レビューによる抜けの解決（G1〜G16：解除された端末の扱い、事前条件と古い鍵の拒否、時刻のずれ、分割ローテーション、開発環境など）と、機能の追加（パスワード履歴 FR-28、CSV 取り込み FR-54、セキュリティログ FR-95、この端末からのサインアウト FR-111）。詳細と決定の根拠は `docs/spec-review.md`（矛盾する場合は同書が優先）。Node.js 24 LTS、リポジトリ構成を `app/` + `platform/` に変更。v0.3：復旧シートの QR だけで復元できる「復旧コード」（オプション、猶予期間付き）を追加（§8.11）。v0.2：自前サーバーへの暗号化同期、PC 用ブラウザ拡張（スマホの承認で解錠）、リカバリーキーと緊急キット、端末管理を追加。方針を「通信ゼロ」から「自前サーバー以外と通信せず、サーバーは中身を読めない」に変更 |
 | 状態 | §19「要確認事項」は推奨値で仮決めしている。回答があれば差し替えて確定版とする |
 
 > **表記ルール**
@@ -155,6 +155,7 @@ PC ではブラウザ拡張から使える。PC の拡張を解錠するには�
 | FR-25 | 詳細画面で、関連付けられた Android アプリの一覧表示と解除ができる（追加は §9.2 のフローで行う） | 必須 |
 | FR-26 | 詳細画面の URL をタップすると OS 既定のブラウザで開く | 任意 |
 | FR-27 | 削除した項目は 30 日間「最近削除した項目」から復元できる（§7.6） | 推奨 |
+| FR-28 | 【v0.4】パスワード履歴：パスワードを変更したとき、直前の値を項目に最大 5 件（新しい順）残す。詳細画面で履歴の日時の一覧、表示（目のアイコン）、コピー、履歴の全消去ができる。履歴のパスワードは Android のオートフィル索引に含めない（§6.1、§15） | 推奨 |
 
 ### 2.4 フロー B：コピー（スマホ）
 
@@ -210,6 +211,7 @@ PC ではブラウザ拡張から使える。PC の拡張を解錠するには�
 | FR-92 | 承認端末の追加は、マスターパスワードとリカバリーキーで行う（復旧と同じ手順、§8.6） | 必須 |
 | FR-93 | 端末の名前を変更できる。名前は保管庫内に暗号化して保存し、サーバーには送らない | 必須 |
 | FR-94 | 既存のスマホで QR を読み取って新しいスマホを追加する方法 | 任意 |
+| FR-95 | 【v0.4】セキュリティログ：承認端末で、アカウントに起きた出来事（端末の追加・解除、鍵セットの変更、鍵の更新、解錠の承認・拒否、復旧コード関連）を新しい順に表示する。端末名は信頼リストから端末内で解決する（`GET /v1/audit-events`、`/settings/security-log`） | 推奨 |
 
 ### 2.9 アカウント
 
@@ -226,6 +228,7 @@ PC ではブラウザ拡張から使える。PC の拡張を解錠するには�
 | FR-108 | 猶予期間中は手元の承認端末に通知し、「取り消す」「自分で使った（すぐに許可）」を選べるようにする | 必須 |
 | FR-109 | 復旧コードは一回きり。使用後・鍵の更新後・取り消し後は無効になり、新しい復旧コードの発行と印刷を促す（控えの確認が済むまで一覧にバナーを出す） | 必須 |
 | FR-110 | 猶予期間は 24／48／72 時間から選ぶ（既定 48 時間。0 にはできない）。復旧コードの無効化と再発行ができる | 必須 |
+| FR-111 | 【v0.4】この端末からのサインアウト：`DELETE /v1/devices/{自分の deviceId}`（管理用署名）を送り、自分の端末レコードに `revokedAt` を設定して同期した後、端末内のデータを消去する。最後の承認端末の場合は、PC を解錠できなくなる旨を警告する。他の端末で解除された場合の動作は §8.8 | 必須 |
 
 ### 2.10 バックアップ
 
@@ -237,12 +240,13 @@ PC ではブラウザ拡張から使える。PC の拡張を解錠するには�
 | FR-51 | インポート：ファイル選択 → パスワード入力 → 件数と重複数のプレビュー → 取り込み方法（すべて追加／同じ ID は更新日時が新しい方を採用／全置換）を選択。取り込んだ結果は同期される | 必須 |
 | FR-52 | iOS で書き出したファイルを Android で読み込める（逆も同様） | 必須 |
 | FR-53 | 設定画面に最終エクスポート日を表示する。90 日以上空いたら一覧上部のバナーで促す | 推奨 |
+| FR-54 | 【v0.4】CSV 取り込み：Chrome / Edge、Safari / iCloud パスワード、Bitwarden、1Password の CSV を、見出し行から形式を自動判別して取り込む。ファイル選択 → プレビュー（形式、件数、重複＝登録ドメインとユーザー名が同じもの、スキップ行）→ 新しい項目として取り込み → 平文の CSV を削除するよう促す。解析は VaultCore 内で行い、取り込んだ結果は同期される（§15、`/settings/backup/csv`） | 必須 |
 
 ### 2.11 設定（スマホ）
 
 | ID | 要件 | 区分 |
 |---|---|---|
-| FR-60 | 設定項目：自動ロック時間、クリップボード消去時間、生体認証のオン／オフ、認証前のユーザー名表示、オートフィルの状態と有効化への誘導、PC セッションの最長時間、端末管理、アカウント（マスターパスワード変更、リカバリーキー再発行、緊急キット再作成、復旧コード、アカウント削除）、エクスポート／インポート、サーバー情報（URL、バージョン、同期状態）、ライセンス表示 | 必須 |
+| FR-60 | 設定項目：自動ロック時間、クリップボード消去時間、生体認証のオン／オフ、認証前のユーザー名表示、オートフィルの状態と有効化への誘導、PC セッションの最長時間、端末管理、アカウント（マスターパスワード変更、リカバリーキー再発行、緊急キット再作成、復旧コード、アカウント削除）、エクスポート／インポート、サーバー情報（URL、バージョン、同期状態。v0.4：URL の変更 `/settings/server`）、ヘルプ（`/settings/help`、v0.4）、Android の信頼するブラウザ（`/settings/trusted-browsers`、v0.4）、セキュリティログ（FR-95）、CSV 取り込み（FR-54）、サインアウト（FR-111）、ライセンス表示 | 必須 |
 
 ---
 
@@ -309,11 +313,12 @@ flowchart TB
 
 ```
 localvault/
-├─ apps/
+├─ docs/                            # spec.md、spec-review.md
+├─ app/
 │  ├─ mobile/                       # Expo アプリ
 │  │  ├─ app.config.js  eas.json
-│  │  ├─ app/                       # expo-router の画面（§14）
 │  │  ├─ src/
+│  │  │  ├─ app/                    # expo-router の画面（§14）
 │  │  │  ├─ components/ hooks/ i18n/ theme/
 │  │  │  ├─ native/VaultCore.ts     # ネイティブモジュールの型付きラッパー（§15）
 │  │  │  ├─ api/                    # サーバー API クライアント（packages/protocol の型を使う）
@@ -335,17 +340,26 @@ localvault/
 │  │  ├─ targets/autofill/          # iOS オートフィル拡張（@bacons/apple-targets）
 │  │  └─ plugins/                   # 自作 config plugin
 │  ├─ extension/                    # ブラウザ拡張（MV3、§12）
-│  │  └─ src/{background,content,popup,options,offscreen,core}/
-│  └─ server/                       # API サーバー（§13）
-│     ├─ src/{routes,db,auth,push,jobs}/
-│     ├─ migrations/
-│     └─ docker-compose.yml  Caddyfile  Dockerfile
-├─ packages/
-│  ├─ protocol/                     # API の型・zod スキーマ・署名対象文字列の生成関数（TS）
-│  └─ crypto-vectors/               # 暗号の互換テスト用ベクタ（JSON）
-└─ shared/
-   └─ public_suffix_list.dat        # PSL（ビルド時にスマホと拡張に同梱）
+│  │  └─ src/{background,content,popup,options,offscreen}/
+│  ├─ server/                       # API サーバー（§13）
+│  │  ├─ src/{routes,db,auth,push,jobs}/
+│  │  └─ migrations/  Dockerfile
+│  ├─ packages/
+│  │  ├─ protocol/                  # API の型・zod スキーマ・ルート表・署名対象文字列の生成関数（TS）
+│  │  ├─ core/                      # 暗号・レコード・Seal・照合の TS 参照実装（拡張と開発用 VaultCore が使う）
+│  │  ├─ crypto-vectors/            # 暗号の互換テスト用ベクタ（JSON）
+│  │  └─ design-tokens/             # 色・余白・文字・動きの定義（スマホと拡張で共有）
+│  └─ shared/
+│     └─ public_suffix_list.dat     # PSL（ビルド時にスマホと拡張に同梱）
+└─ platform/
+   ├─ docker/                       # compose.yml、compose.dev.yml、Caddyfile
+   ├─ env/                          # .env の雛形
+   ├─ scripts/                      # 運用スクリプト（バックアップなど）
+   └─ secrets/                      # Docker secrets（Git 管理外）
 ```
+
+- （v0.4）本書の以降の節にある `apps/` は `app/` と、`packages/` は `app/packages/` と読み替える。サーバーの Compose ファイルと Caddyfile は `platform/docker/` に置く。
+- （v0.4）`packages/core` は、暗号・レコードの暗号化・Seal・照合・PSL 判定の TypeScript 参照実装。ブラウザ拡張が使うほか、ネイティブ実装が完成するまでの開発用 VaultCore もこれで動かす。ネイティブ実装との一致は `crypto-vectors` で確認する（NFR-14）。
 
 ### 4.3 iOS のコード共有【必須】
 
@@ -547,6 +561,7 @@ PC 拡張：ポップアップから `navigator.clipboard.writeText` でコピ�
 
 - 通信は HTTPS のみ。iOS は ATS の既定のまま（例外を設けない）、Android は `network_security_config` で `cleartextTrafficPermitted="false"`。
 - サーバー URL はユーザーが設定する。`https://` 以外と自己署名証明書は受け付けない（Let's Encrypt などの正規の証明書を前提とする）。
+- （v0.4）**開発環境の例外**：開発ビルドに限り（コンパイル時フラグ `LV_DEV_ALLOW_HTTP`）、`http://localhost`、`http://127.0.0.1`、`http://10.0.2.2`（Android エミュレーター）を受け付ける。製品ビルドは上記の https のみの規則を維持し、フラグが有効なビルドは配布しない。開発用サーバーは Caddy の背後でプレーン HTTP を待ち受け、`platform/docker/compose.dev.yml` が `https://localhost:8443`（Caddy の内部 CA。ルート証明書を iOS シミュレーターや Chrome に入れる）とプレーン `http://localhost:8787` を公開する。
 - 証明書のピン留めはしない。中身は端末間の暗号化と端末鍵の固定で守られているため、証明書の更新で使えなくなる不具合を避けることを優先する。
 - iOS オートフィル拡張と Android オートフィルサービス（`VaultAutofillService`、`AuthActivity`、`PickerActivity`）は、ネットワーク API を呼ばない。コードレビューと §17.3 の通信検査で確認する。
 - Android の `INTERNET` 権限は必要になるため、v0.1 の `blockedPermissions` による除去は廃止する。
@@ -583,6 +598,7 @@ type LoginData = {
   createdAt: string;             // ISO 8601（UTC）
   trashedAt: string | null;      // 「最近削除した項目」に入った日時（§7.6）
   conflictOf: string | null;     // 競合コピーの場合、元の項目の ID（§7.4）
+  passwordHistory?: { password: string; changedAt: string }[];  // （v0.4・FR-28）新しい順、最大 5 件。無ければ []
 };
 
 type UrlEntry = {
@@ -620,6 +636,7 @@ type MetaData = {                // アカウントに 1 件だけ。ID は固�
 - `kind` は暗号化の内側に入れ、サーバーからはレコードの種類が分からないようにする。
 - 【推奨】平文の JSON の末尾に空白を足して 256 バイト単位にそろえ、暗号文の長さから内容を推測されにくくする（JSON として有効なまま）。
 - 使用履歴（最近使った日時・回数）は端末ごとに持ち、同期しない。
+- （v0.4）`passwordHistory` は `saveItem` でパスワードが変わるとき、直前の値を先頭に積み、6 件目以降を捨てる。履歴のパスワードは Android のオートフィル索引（§6.4）に入れない。
 
 ### 6.2 暗号化レコード（同期の単位）
 
@@ -980,14 +997,21 @@ sequenceDiagram
 2. 端末レコードに `revokedAt` を設定して同期する。
 3. `DELETE /v1/devices/{id}`（管理用署名付き）を送る。サーバーはその端末のトークンを無効にし、以後のリクエストを `E_DEVICE_REVOKED` で拒否する。
 4. 解除された PC 拡張は、次にサーバーにアクセスしたときに `E_DEVICE_REVOKED` を受け取り、セッション、キャッシュ、端末鍵を削除して初期状態に戻る。
+5. （v0.4）解除されたスマホは、`E_DEVICE_REVOKED` を受けたらロックして同期を止め、画面 `/revoked` を表示する。「端末内のデータを消去」（`wipeLocal`）か、§8.6 の手順での再登録を選ばせる。
+6. （v0.4）自分の端末を解除する「この端末からのサインアウト」は FR-111。アカウントが他の端末で削除された場合、サーバーは 90 日間 `deleted_devices` に端末 ID を残し、その端末の認証付きリクエストに `E_ACCOUNT_DELETED`（410）を返す。クライアントは利用者に知らせてから端末内のデータを消去する。
 
 **鍵の更新（解除時に選択、推奨）**
 
 1. 新しい VK′ を生成し、全レコードを VK′ で再暗号化する。鍵セットも VK′ で作り直す（`vkVersion` と `keysetVersion` を上げる）。
-2. `POST /v1/rotate` で、鍵セットと全レコードを送る。サーバーは 1 つのトランザクションで置き換える。
+2. （v0.4）分割して送る。
+   1. `POST /v1/rotations`（管理用署名）に `{ expectedRev, newVkVersion }` を送り、`rotationId`（有効 15 分、アカウントに 1 つ。新しく作ると古いものは破棄）を得る。
+   2. 全レコードを VK′ で再暗号化し、100 件以内ずつ `PUT /v1/rotations/{id}/records` で送る（サーバー側に一時保存される）。
+   3. `POST /v1/rotations/{id}/commit`（管理用署名）に `{ keyset, verifier, recordCount }` を送る。サーバーは 1 つのトランザクションで、`record_rev == expectedRev` の確認（違えば `E_VERSION_CONFLICT`。一時保存は破棄され、同期してからやり直す）、一時保存の ID 集合が現在の全レコード ID と一致することの確認、全レコードの置き換え、鍵セットの更新を行う。
+   4. 途中でやめるときは `DELETE /v1/rotations/{id}`。
 3. ほかの承認端末は §7.7 のとおり、マスターパスワードの入力で VK′ を取り出す。
 4. 画面に「解除した端末が解錠中にデータを読んでいた場合、その時点の内容は守れません。重要なサイトのパスワードは変更してください」と表示する。
 5. 復旧コードが有効なら無効になる（古い VK を包んでいるため、§8.11.6）。新しい復旧コードの発行と印刷を促す。
+6. （v0.4）事前条件：`PUT /v1/keyset` は `keysetVersion == 現在値 + 1` かつ `vkVersion == 現在値` でなければ `E_VERSION_CONFLICT`。`POST /v1/records/batch` は、`vkVersion` が現在値と違う変更を 1 件でも含むと全体を `E_STALE_KEY` で拒否する。管理用署名の `ts` が前後 5 分を超えると `E_CLOCK_SKEW`（`details.serverTime` 付き）。
 
 ### 8.9 スマホを紛失したとき（利用者向けの手順として画面とヘルプに載せる）
 
@@ -1529,12 +1553,12 @@ sequenceDiagram
 
 | 項目 | 採用 |
 |---|---|
-| 言語・実行環境 | TypeScript、Node.js 22 LTS |
+| 言語・実行環境 | TypeScript、Node.js 24 LTS（v0.4：22 は 2027-04 に保守期間が終わるため） |
 | Web フレームワーク | Hono（`@hono/node-server`） |
 | データベース | PostgreSQL 16 |
 | マイグレーション・ORM | 任意（Drizzle、Kysely など）。マイグレーションは SQL ファイルで管理する |
 | 入力検証 | `packages/protocol` の zod スキーマ |
-| TLS | Caddy（Let's Encrypt で証明書を自動取得） |
+| TLS | Caddy（Let's Encrypt で証明書を自動取得）。アプリ本体はプレーン HTTP で Caddy の背後に置く（v0.4） |
 | 配置 | Docker Compose（app、db、caddy）。単一インスタンス |
 
 ### 13.2 設定（環境変数）
@@ -1549,8 +1573,11 @@ sequenceDiagram
 | `APNS_KEY_ID`、`APNS_TEAM_ID`、`APNS_KEY_P8`、`APNS_TOPIC`、`APNS_PRODUCTION` | APNs のトークン認証の設定。`APNS_TOPIC` はアプリの Bundle ID |
 | `FCM_SERVICE_ACCOUNT_JSON` | FCM HTTP v1 用のサービスアカウント |
 | `LOG_LEVEL` | ログの詳細度 |
+| `TRUST_PROXY` | （v0.4）信頼するプロキシの段数（既定 0、compose では 1）。クライアント IP は `X-Forwarded-For` の右からその段数番目の要素 |
 
 招待コードは CLI で発行する（例 `docker compose exec app node dist/cli.js invite create`）。DB には SHA-256 で保存する。
+
+（v0.4）CLI のコマンド：`invite create [--expires-in 7d]`、`invite list`、`invite revoke <id>`、`account list`、`account delete <name> --yes`、`stats`、`migrate`。本文サイズの上限は、既定の JSON が 1 MB、`POST /v1/records/batch` とローテーションの分割が 12 MB（各 100 レコードまで）。
 
 ### 13.3 認証
 
@@ -1566,23 +1593,26 @@ sequenceDiagram
 
 ### 13.4 API 一覧
 
-すべて `Content-Type: application/json`。エラーは `{ "error": { "code": "…", "message": "…" } }`。
+すべて `Content-Type: application/json`。エラーは `{ "error": { "code": "…", "message": "…", "details": { … } } }`（`details` は任意。v0.4）。
 
 | メソッド | パス | 認証 | 概要 |
 |---|---|---|---|
 | GET | `/v1/health` | なし | `{ version, registrationMode }` |
 | GET | `/v1/prelogin?account=` | なし（レート制限） | `{ accountId, kdf }`。存在しない名前にも偽の値を返す |
-| POST | `/v1/accounts` | 招待コード | アカウントと最初の承認端末を作成（§8.2） |
+| POST | `/v1/accounts` | 招待コード | アカウントと最初の承認端末を作成（§8.2）。（v0.4）冪等：同じ `accountId`・`verifier`・`device.signPub` での再試行は 201、それ以外の重複は `E_ACCOUNT_EXISTS` |
 | POST | `/v1/auth/challenge` | なし | 端末ログインのチャレンジ |
 | POST | `/v1/auth/token` | 端末署名 | アクセストークンの発行 |
 | POST | `/v1/auth/recover` | authKey | 新しい承認端末を登録し、トークンと鍵セットを返す（§8.6） |
 | GET | `/v1/keyset` | トークン | 現在の鍵セット |
-| PUT | `/v1/keyset` | 承認端末＋管理 | マスターパスワード変更・リカバリーキー再発行（`keyset`、`verifier`） |
+| PUT | `/v1/keyset` | 承認端末＋管理 | マスターパスワード変更・リカバリーキー再発行（`keyset`、`verifier`）。（v0.4）`keysetVersion == 現在値 + 1` かつ `vkVersion == 現在値`、違えば `E_VERSION_CONFLICT` |
 | GET | `/v1/records?since=&limit=` | トークン | レコードの取得（§7.2） |
-| POST | `/v1/records/batch` | 承認端末 | レコードの送信（§7.3） |
-| POST | `/v1/rotate` | 承認端末＋管理 | 鍵の更新（鍵セットと全レコードを置き換え） |
+| POST | `/v1/records/batch` | 承認端末 | レコードの送信（§7.3）。最大 100 件、12 MB。（v0.4）`vkVersion` が現在値と違う変更が 1 件でもあれば全体を `E_STALE_KEY` で拒否 |
+| POST | `/v1/rotations` | 承認端末＋管理 | （v0.4）鍵の更新の開始。`{ expectedRev, newVkVersion }` → `{ rotationId, expiresAt }`（15 分。アカウントに 1 つ、新しく作ると古いものは破棄）。旧 `POST /v1/rotate` は廃止 |
+| PUT | `/v1/rotations/{id}/records` | 承認端末（作成した端末） | （v0.4）`{ records: [{ id, deleted, nonce, ct }] }`（100 件・12 MB まで）をサーバー側に一時保存 |
+| POST | `/v1/rotations/{id}/commit` | 承認端末＋管理 | （v0.4）`{ keyset, verifier, recordCount }` → `{ cursor }`。1 トランザクションで検証（`record_rev == expectedRev`、一時保存の ID 集合 = 現在の全レコード ID）し、全レコードの置き換え、鍵セット・`vk_version`・`min_valid_cursor` の更新、復旧コードの削除を行う |
+| DELETE | `/v1/rotations/{id}` | 承認端末 | （v0.4）鍵の更新の中止 |
 | GET | `/v1/devices` | 承認端末 | 端末の一覧（ID、種類、プラットフォーム、登録日、最終利用日時、解除日時） |
-| DELETE | `/v1/devices/{id}` | 承認端末＋管理 | 端末の解除 |
+| DELETE | `/v1/devices/{id}` | 承認端末＋管理 | 端末の解除。（v0.4）自分自身の ID も可（FR-111） |
 | PUT | `/v1/devices/self/push-token` | 承認端末 | プッシュ通知のトークン登録（`{ pushPlatform: 'apns' \| 'fcm', token }`） |
 | PUT | `/v1/devices/self/admin-key` | 承認端末＋authKey | 管理用署名鍵の再登録 |
 | POST | `/v1/pairings` | なし（レート制限） | ペアリングの開始（§8.3） |
@@ -1604,7 +1634,8 @@ sequenceDiagram
 | POST | `/v1/recovery-claims/{id}/complete` | claimToken | 完了。端末の登録、トークン、鍵セット、包んだ VK を返し、復旧コードを削除する。猶予期間中は `E_CLAIM_WAITING` |
 | POST | `/v1/recovery-claims/{id}/cancel` | 承認端末＋管理 | 取り消し（復旧コードも無効にする） |
 | POST | `/v1/recovery-claims/{id}/approve-now` | 承認端末＋管理 | 猶予期間を省略する |
-| DELETE | `/v1/account` | 承認端末＋管理署名＋authKey | アカウントの削除 |
+| DELETE | `/v1/account` | 承認端末＋管理署名＋authKey | アカウントの削除。（v0.4）削除した端末 ID は `deleted_devices` に 90 日残す |
+| GET | `/v1/audit-events?before=&limit=` | 承認端末 | （v0.4・FR-95）`{ events: [{ id, kind, deviceId, createdAt }], hasMore }`。`id` の降順、`limit` は最大 50 |
 
 **エラーコード**
 
@@ -1624,6 +1655,10 @@ sequenceDiagram
 | `E_CLAIM_WAITING` | 409 | 復元要求が猶予期間中（`availableAt` を付ける） |
 | `E_RC_FROZEN` | 423 | 復旧コードが凍結されている |
 | `E_CLAIM_CLOSED` | 410 | 復元要求が取り消し・凍結・失効済み |
+| `E_ACCOUNT_DELETED` | 410 | （v0.4）端末が属していたアカウントが削除された（`deleted_devices` に残る 90 日間）。クライアントは端末内のデータを消去する |
+| `E_VERSION_CONFLICT` | 409 | （v0.4）鍵セットの版・`record_rev` が期待と違う（`PUT /v1/keyset`、`POST /v1/rotations/{id}/commit`） |
+| `E_STALE_KEY` | 409 | （v0.4）送られた `vkVersion` がアカウントの現在値と違う。同期して VK の更新を取り込んでからやり直す |
+| `E_CLOCK_SKEW` | 400 | （v0.4）管理用署名の `ts` が前後 5 分を超える。`details.serverTime`（ISO 8601）を付け、クライアントは「端末の時刻設定を確認してください」と表示する |
 
 ### 13.5 主なリクエストの例
 
@@ -1755,8 +1790,11 @@ create table admin_nonces (
 );
 
 create table invites (
+  id         uuid not null unique,                  -- v0.4：CLI で指定する（invite revoke <id>）
   code_hash  bytea primary key,
   created_at timestamptz not null default now(),
+  expires_at timestamptz,                           -- v0.4
+  revoked_at timestamptz,                           -- v0.4
   used_at    timestamptz,
   account_id uuid
 );
@@ -1765,7 +1803,7 @@ create table audit_events (
   id         bigserial primary key,
   account_id uuid,
   device_id  uuid,
-  kind       text not null,                         -- account_created / device_added / device_revoked / keyset_changed / rotated / unlock_approved / rc_issued / rc_claimed / rc_canceled / rc_used / rc_frozen など
+  kind       text not null,                         -- account_created / device_added / device_revoked / keyset_changed / rotated / unlock_approved / rc_issued / rc_claimed / rc_canceled / rc_used / rc_frozen / device_signed_out / rc_approved_now / rc_revoked / unlock_denied など（v0.4：FR-95 で一覧に出す）
   created_at timestamptz not null default now()
 );
 
@@ -1794,9 +1832,37 @@ create table recovery_claims (
 ```
 
 - `rev` の払い出しは、トランザクション内で `update accounts set record_rev = record_rev + 1 where id = $1 returning record_rev` を使い、アカウント単位で直列化する。
-- `POST /v1/rotate` は 1 つのトランザクションで、全レコードの置き換え、鍵セットの更新、`min_valid_cursor` の更新、復旧コードの削除を行う。
+- `POST /v1/rotations/{id}/commit` は 1 つのトランザクションで、全レコードの置き換え、鍵セットの更新、`min_valid_cursor` の更新、復旧コードの削除を行う（v0.4。旧 `POST /v1/rotate` は廃止）。
 - `POST /v1/recovery-claims` は、同じアカウントに `waiting` の要求があれば、両方を `disputed` にして `recovery_codes.frozen_at` を設定し、承認端末に通知する（§8.11.6）。
-- 定期処理（1 時間ごと）：期限切れのチャレンジ・nonce・ペアリング・解錠リクエストの削除（リクエストは作成から 24 時間で削除）、復元要求の失効（`available_at` から 7 日）、180 日を過ぎた削除の印の物理削除と `min_valid_cursor` の更新、90 日を過ぎた監査ログの削除。
+- （v0.4）追加のテーブル：
+
+```sql
+create table deleted_devices (                      -- アカウント削除後 90 日保持（E_ACCOUNT_DELETED 用）
+  device_id  uuid primary key,
+  deleted_at timestamptz not null default now()
+);
+
+create table rotations (                            -- 鍵の更新（分割送信）。アカウントに 1 件
+  id             uuid primary key,
+  account_id     uuid not null unique references accounts(id) on delete cascade,
+  device_id      uuid not null references devices(id) on delete cascade,
+  expected_rev   bigint not null,
+  new_vk_version int not null,
+  created_at     timestamptz not null default now(),
+  expires_at     timestamptz not null               -- 作成から 15 分
+);
+
+create table rotation_records (
+  rotation_id uuid not null references rotations(id) on delete cascade,
+  id          uuid not null,
+  deleted     boolean not null,
+  nonce       bytea,
+  ct          bytea,
+  primary key (rotation_id, id)
+);
+```
+
+- 定期処理（1 時間ごと）：期限切れのチャレンジ・nonce・ペアリング・解錠リクエストの削除（リクエストは作成から 24 時間で削除）、復元要求の失効（`available_at` から 7 日）、180 日を過ぎた削除の印の物理削除と `min_valid_cursor` の更新、90 日を過ぎた監査ログの削除、期限切れのローテーションの削除、90 日を過ぎた `deleted_devices` の削除（v0.4）。
 
 ### 13.7 プッシュ通知
 
@@ -1810,6 +1876,7 @@ create table recovery_claims (
 | FCM | データメッセージ `{"t":"unlock","r":"<requestId>"}`、`priority: high`、`ttl: 120s`。アプリ側でローカル通知として表示する |
 | 復元要求（APNs・FCM 共通） | `t` は `rc_claim`、`r` は復元要求の ID。文言は「復旧コードによる復元が始まりました。心当たりがなければ取り消してください」。有効期限は猶予期間の終わりまで |
 
+- （v0.4）凍結の通知：`t` は `rc_frozen`（`r` なし）。文言は「復旧コードが凍結されました。アプリで確認してください」。タップすると `/settings/recovery-code` を開く。
 - 通知をタップしたら承認画面（`/approve/<requestId>`）を開く。復元要求の場合は `/recovery-claim/<id>` を開く。
 - APNs が 410、FCM が `UNREGISTERED` を返したトークンは削除する。
 - 通知が届かない場合でも、アプリを前面にすれば保留中のリクエストを確認できる（`GET /v1/unlock-requests/pending`）。
@@ -1898,6 +1965,12 @@ secrets:
 | 復旧シート | `/settings/recovery-code/sheet` | QR と文字列の表示（Android は `FLAG_SECURE`）、PDF の作成、末尾 6 文字の確認 |
 | バックアップ | `/settings/backup` | エクスポート、インポート（FR-50〜53） |
 | ライセンス | `/settings/licenses` | 使用 OSS と PSL のライセンス |
+| 解除された端末 | `/revoked` | （v0.4・G1）`E_DEVICE_REVOKED` の後に表示。ロック・同期停止済み。「端末内のデータを消去」または §8.6 での再登録 |
+| ヘルプ | `/settings/help` | （v0.4）§8.9、§8.10、§8.11.7 の文面 |
+| 信頼するブラウザ | `/settings/trusted-browsers` | （v0.4・Android のみ）許可リストの一覧と追加・削除。同梱の項目は削除不可。端末内のみ保存し同期しない |
+| サーバー URL の変更 | `/settings/server` | （v0.4）新 URL を入力 → 同じ `accountId` か（`prelogin`）と端末ログインを確認 → 切り替え |
+| セキュリティログ | `/settings/security-log` | （v0.4・FR-95）出来事を新しい順に表示（50 件ずつ）。端末名は信頼リストから解決 |
+| CSV 取り込み | `/settings/backup/csv` | （v0.4・FR-54）ファイル選択 → プレビュー → 取り込み → CSV の削除を促す |
 
 - ロック中に保護された画面へ遷移しようとしたら `/unlock` に戻す。通知から `/approve/...` を開いた場合は、承認画面で生体認証を求める（先にロック画面を挟まない）。
 - タップ領域は 44pt 以上。ダークモード対応。
@@ -1987,6 +2060,11 @@ export interface VaultCore {
   reregisterAdminKey(masterPassword: string): Promise<ServerRequest>;
   buildDeleteAccount(masterPassword: string): Promise<ServerRequest>;
   wipeLocal(): Promise<void>;
+  // v0.4
+  getAccountInfo(): Promise<{ accountId: string; accountName: string; serverUrl: string; deviceId: string }>;
+  getThrottleState(): Promise<{ failedCount: number; retryAfterSec: number }>;  // FR-12 のカウンタ（本体と拡張で共有、G15）
+  changeServerUrl(newUrl: string): Promise<void>;  // JS が先に prelogin の accountId 一致と端末ログインを確認する（G14）
+  buildSignOutDevice(): Promise<ServerRequest[]>;  // FR-111：DELETE /v1/devices/{自分} の後に wipeLocal
 
   // ---- 項目 ----
   listItems(opts?: { includeTrashed?: boolean }): Promise<ItemSummary[]>;
@@ -1998,6 +2076,11 @@ export interface VaultCore {
   purgeItem(id: string): Promise<void>;
   resolveConflict(copyId: string, keep: 'copy' | 'original'): Promise<void>;
   unlinkAndroidApp(id: string, packageName: string): Promise<void>;
+  // v0.4（FR-28）パスワード履歴。履歴のパスワード本体は JS に渡さない（表示・コピー時のみ）
+  getPasswordHistory(id: string): Promise<{ index: number; changedAt: string }[]>;
+  revealHistoricPassword(id: string, index: number): Promise<string>;
+  copyHistoricPassword(id: string, index: number): Promise<{ clearsAt: string | null }>;
+  clearPasswordHistory(id: string): Promise<void>;
 
   // ---- コピー・生成 ----
   copy(id: string, field: CopyField): Promise<{ clearsAt: string | null }>;
@@ -2049,6 +2132,13 @@ export interface VaultCore {
   inspectImport(fileUri: string, password: string): Promise<{ itemCount: number; conflictCount: number }>;
   importVault(fileUri: string, password: string, strategy: 'append' | 'newer' | 'replace')
     : Promise<{ added: number; updated: number }>;
+  // v0.4
+  inspectCsvImport(fileUri: string): Promise<{ format: 'chrome' | 'safari' | 'bitwarden' | '1password'; itemCount: number; duplicateCount: number; skippedCount: number }>;
+  importCsv(fileUri: string, opts: { skipDuplicates: boolean }): Promise<{ added: number; skipped: number }>;
+  getBackupInfo(): Promise<{ lastExportAt: string | null }>;
+  listTrustedBrowsers(): Promise<{ packageName: string; label: string; builtIn: boolean }[]>;  // Android のみ
+  addTrustedBrowser(packageName: string): Promise<void>;
+  removeTrustedBrowser(packageName: string): Promise<void>;  // builtIn は削除不可
   getSettings(): Promise<Settings>;
   updateSettings(patch: Partial<Settings>): Promise<void>;
   getAutofillStatus(): Promise<{ supported: boolean; enabled: boolean; textInsertionSupported: boolean }>;
@@ -2088,6 +2178,10 @@ export interface VaultCore {
 | `E_INVALID_RECOVERY_CODE` | 復旧コードの形式・検査文字が合わない | 読み取り・入力のやり直し |
 | `E_CLAIM_WAITING` | 復元要求が猶予期間中 | 残り時間を表示 |
 | `E_RC_FROZEN`、`E_CLAIM_CLOSED` | 復旧コードの凍結、要求の取り消し・失効 | リカバリーキーでの復旧（§8.6）を案内 |
+| `E_DEVICE_REVOKED`（v0.4） | この端末が解除された | ロック・同期停止 → `/revoked`（§8.8） |
+| `E_ACCOUNT_DELETED`（v0.4） | アカウントが他の端末で削除された | 利用者に知らせて `wipeLocal` → `/setup` |
+| `E_CLOCK_SKEW`（v0.4） | 端末の時刻がずれている | 「端末の時刻設定を確認してください」 |
+| `E_STALE_KEY`、`E_VERSION_CONFLICT`（v0.4） | 鍵の世代・版が古い | 同期してからやり直す（`needsMasterPassword` の場合は入力へ） |
 
 **同期エンジン（`src/sync/engine.ts`）の流れ**
 

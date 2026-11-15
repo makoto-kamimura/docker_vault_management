@@ -1,0 +1,14 @@
+packages:
+  - app/mobile
+  - app/extension
+  - app/server
+  - app/packages/*
+
+# pnpm 12 は依存パッケージのビルドスクリプトを明示的に許可／拒否しないと
+# `--frozen-lockfile` のインストールが失敗する（ERR_PNPM_IGNORED_BUILDS）。
+# 必要なものだけ許可する。
+allowBuilds:
+  esbuild: true
+  cpu-features: false
+  protobufjs: false
+  ssh2: false

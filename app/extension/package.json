@@ -1,0 +1,37 @@
+{
+  "name": "@localvault/extension",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:http": "LV_DEV_ALLOW_HTTP=1 wxt",
+    "build": "wxt build",
+    "build:dev": "LV_DEV_ALLOW_HTTP=1 wxt build --mode development --out-dir .output-dev",
+    "typecheck": "wxt prepare && tsc --noEmit",
+    "test": "vitest run",
+    "check:manifest": "node scripts/check-manifest.mjs",
+    "wxt:prepare": "wxt prepare"
+  },
+  "dependencies": {
+    "@localvault/core": "workspace:*",
+    "@localvault/design-tokens": "workspace:*",
+    "@localvault/protocol": "workspace:*",
+    "qrcode-generator": "^2.0.4",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.3.7",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@wxt-dev/module-react": "^1.2.2",
+    "fake-indexeddb": "^6.2.8",
+    "happy-dom": "^21.0.4",
+    "playwright-core": "^1.65.0",
+    "vitest": "^5.1.0",
+    "wxt": "^0.21.5"
+  }
+}

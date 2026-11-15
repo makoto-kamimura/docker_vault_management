@@ -1,0 +1,189 @@
+{
+  "description": "Spec 6.2. plaintext = JSON.stringify(plain) padded with 0x20 to a multiple of 256 bytes.",
+  "vkHex": "1186bd43f6d71bb7a06a74cec75d0488ed5234c2e80017b8ca6da58973d00d44",
+  "accountId": "5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f",
+  "cases": [
+    {
+      "name": "login",
+      "recordId": "8c3f5d21-a06e-4f4d-b112-4d5e6f708192",
+      "vkVersion": 1,
+      "aad": "lv|v2|rec|5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f|8c3f5d21-a06e-4f4d-b112-4d5e6f708192|1",
+      "plain": {
+        "kind": "login",
+        "data": {
+          "title": "GitHub",
+          "username": "alice@example.com",
+          "password": "p@ss-Wörd-日本語",
+          "urls": [
+            {
+              "url": "https://github.com/login",
+              "match": "domain"
+            }
+          ],
+          "androidApps": [],
+          "notes": "",
+          "favorite": true,
+          "createdAt": "2026-11-01T09:00:00.000Z",
+          "trashedAt": null,
+          "conflictOf": null,
+          "passwordHistory": []
+        },
+        "updatedAt": "2026-11-02T09:00:00.000Z",
+        "updatedBy": "7b2e4c10-9f5d-4e3c-a001-3c4d5e6f7081"
+      },
+      "nonceHex": "f22e18250817604e4704b888",
+      "jsonByteLength": 397,
+      "paddedByteLength": 512,
+      "encrypted": {
+        "nonce": "8i4YJQgXYE5HBLiI",
+        "ct": "ipzHw-UcaLyeGc3WYRe7hMul11-vfp-08EDD0wT4T0r1Ro7Yz7Sszx9PJM5VYpPQH84weF9mMquRyQ2fYBysjDqiyrMOHXiYFZmkCxFPSjRwGOVd7Wy9s72wyh1eaOGqG5aANylwUrpeKlDTjVepkKgFLa-Zw3Yf9da8Y0bVL09VPVG4ldKbn8r5-Moxhau6kUIqgmPfEvVzdYRoKv47flxwkMYt3KIYslWhRqfg3s9B4jklnkBhkiW25usu_WJ7EQXBIva9iu21LCBBoTy2GIfQST0JkOAlt5ujFBuNZQN-qEe9p-OWmVhwcVgNFsZmpmtm0nfOL_OquUvXIPAQf25tG2ndMqn9KxHT8X_z11_oxGLnbt1Qdy4gwo1IDsluy1YCCpm31iF_kLrYjo-S3a4j-lZaheu8SoCM9kox4dFSJrnCsZ_2MysKeSXM45m63IKaolpTLBtew2zWp3K7uzsGizl8wPn3K24TMdPtwyCQ34NWSXkzYQkHBvTOICqZCgRH4H-K67vlI_c9TaoU9d2W7JRkxv-n2SvV6HHcJubzdFO8sWTuEx6h4aFd2n_HHlO5W0LcsvOes-zWh7K1NXnw16VmtezjZLrqgwi4A158snFNnzjOhX3gPpf2Vq8b2JQLXONTqKHUl6phmHFQKm-n1wpNdZIvhAFOGRzVJJJOJTwpnn-YOtXyzNbW8n8_"
+      }
+    },
+    {
+      "name": "login-history",
+      "recordId": "9d4a6e32-b17f-4a5e-8223-5e6f708192a3",
+      "vkVersion": 2,
+      "aad": "lv|v2|rec|5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f|9d4a6e32-b17f-4a5e-8223-5e6f708192a3|2",
+      "plain": {
+        "kind": "login",
+        "data": {
+          "title": "Bank",
+          "username": "alice@example.com",
+          "password": "p@ss-Wörd-日本語",
+          "urls": [
+            {
+              "url": "https://github.com/login",
+              "match": "domain"
+            }
+          ],
+          "androidApps": [],
+          "notes": "",
+          "favorite": true,
+          "createdAt": "2026-11-01T09:00:00.000Z",
+          "trashedAt": null,
+          "conflictOf": null,
+          "passwordHistory": [
+            {
+              "password": "old1",
+              "changedAt": "2026-10-01T00:00:00.000Z"
+            }
+          ]
+        },
+        "updatedAt": "2026-11-02T09:00:00.000Z",
+        "updatedBy": "7b2e4c10-9f5d-4e3c-a001-3c4d5e6f7081"
+      },
+      "nonceHex": "48457fbb38e6ee262ed8fa07",
+      "jsonByteLength": 453,
+      "paddedByteLength": 512,
+      "encrypted": {
+        "nonce": "SEV_uzjm7iYu2PoH",
+        "ct": "OaxW7Lupl6WDw8sOdag6o5bgTFYnC2J6QzvG24wVVgJgzb_QAau9KamyHA6NlsuDN2LnHPEBkVgiEpaw491JWKhTRlsHjmsqKw-gzwa8RUXVxeGNm4QmMJRfTYstAngUh53Ey0sy11Z7a_TZ5Y6rO0HhSnlyYkEZjYuG8dMRA0qPFyx0_XlHtB3oCeRqqDJkFJJ5CpudhXIqvvcvf4mfuBu05FVwaEhg02xwT3dtiLYNikl0GddtnPaFew6vF0OWlvOYey-DhglFf__88wjtP01X-y9-5y3SCaJU3nl429kbtPRjote9emrZ5t7y3CJdjLymvafRhD7ZTcC3I9HkdjrEZCutT5D25G4S5euNNTIcVS2u_C3y-RhWhjvAKeqQvBWIGBnFnXN_IC7oultvVdCmGHpY0191QKgXbg27U-wHb-XMXKkY5Qm0HIahKNIaolYZltlPUwDPY-b14_LiK46OXjAekQ_E5dNzswpHbiAWj1ZsuozsZDRfxklvbf5lyE22zLS6yLeogtcbQrm8k68IoXWP3YmCH4FyJh4XhRDMO575hwz08KAWy4pHZazWOLzEM35TfQ2_G17YAnkj8HeGtHTsDL4r5oo-y91cmijP7aXKWkpaZwFE2Xt6LkbLAHDCqKQKHqnFjmgmk06eoa6k31zf9PiO08iZZl-BzIMiw_Z-VHG9WBYBocqgD549"
+      }
+    },
+    {
+      "name": "device",
+      "recordId": "7b2e4c10-9f5d-4e3c-a001-3c4d5e6f7081",
+      "vkVersion": 1,
+      "aad": "lv|v2|rec|5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f|7b2e4c10-9f5d-4e3c-a001-3c4d5e6f7081|1",
+      "plain": {
+        "kind": "device",
+        "data": {
+          "deviceId": "7b2e4c10-9f5d-4e3c-a001-3c4d5e6f7081",
+          "name": "Chrome（Windows）",
+          "type": "extension",
+          "platform": "chrome",
+          "signPub": "BNFhVpttBnI2PDkpkB9mMK9_YRboGTq0OqKJjx7rVlwCTteaLrDgItYnekdT99rhg4NNvBQyGSceM_UkoeFGm0E",
+          "adminPub": null,
+          "addedAt": "2026-11-01T09:00:00.000Z",
+          "addedBy": "8c3f5d21-a06e-4f4d-b112-4d5e6f708192",
+          "addedVia": "pairing",
+          "revokedAt": null
+        },
+        "updatedAt": "2026-11-01T09:00:00.000Z",
+        "updatedBy": "8c3f5d21-a06e-4f4d-b112-4d5e6f708192"
+      },
+      "nonceHex": "d4b92ae3aa1c073849185df6",
+      "jsonByteLength": 474,
+      "paddedByteLength": 512,
+      "encrypted": {
+        "nonce": "1Lkq46ocBzhJGF32",
+        "ct": "Krqw4hCIwkhvf6l0-t9MU7ndGN-_txxAWkYZfTE6xCCWcSqbe2L5V7rVtzqqkxh35ocBTozEfRjrEssd9fsbd4_huHXkHD54xIEVnY4PiP830gRYIaCl5WBYfvmqxGyi57mk3coADNmoQcBFupUpVrL64lBuz_2cOd_dPv877SypoE-c35FpVGTnlm--hRuYceE5Ll2_TEI42wma_nEspBOnKjoZxAff50D8tsrJiuXQdK7OtEsgUjIdulii4WQXhfykBRafECmyQmvpb4Eeafx1kg7F3ds1Ttt_OUqxy3DydBzlwTApgxNwhtdoJ-bFslHlU0mDiuLOT9CPsRJg7smwCJF5EP2Ub7SkXHNWVZlKhf_xFSq5o3BWSZdHtSIWrkltAbKKuzw4rpRp0RjR-xzefE4hBO0fzO4B6NScdUnlL5WX0lVl6I46w-OBWfRktYJ004WvVLNE4iO0VuQT-zmXmcnADLVf19EhO8MBKQTILRLoaMldhW0BncFZexyj8jOkwzD45Q0PJPDNpZT_RkI74RUTTVkmGjY0CHjL0ied6mLaRgmGd8N3RGKg1IPgWc0muVIy7WRjCH3uTRM29PJ0ByDArNj4Unnis6cSdP5eEaqcA83UWRaAwSEfKP3Rjj5HBgON5-4eoc5wTJPnKVTa9o83VycF2v3YW_RT0c03Wryw-aPN9Xrn0NQqR_xn"
+      }
+    },
+    {
+      "name": "meta",
+      "recordId": "00000000-0000-4000-8000-000000000001",
+      "vkVersion": 1,
+      "aad": "lv|v2|rec|5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f|00000000-0000-4000-8000-000000000001|1",
+      "plain": {
+        "kind": "meta",
+        "data": {
+          "recoveryKey": "LV2-0123-4567-89AB-CDEF-GHJK-MNPQ-RSTV",
+          "pcSessionMaxSec": 3600,
+          "createdAt": "2026-11-01T09:00:00.000Z"
+        },
+        "updatedAt": "2026-11-01T09:00:00.000Z",
+        "updatedBy": "7b2e4c10-9f5d-4e3c-a001-3c4d5e6f7081"
+      },
+      "nonceHex": "d540a7967d80c71b2e01f312",
+      "jsonByteLength": 231,
+      "paddedByteLength": 256,
+      "encrypted": {
+        "nonce": "1UCnln2AxxsuAfMS",
+        "ct": "rIqs9OHalNbcND-Qi804HMZ_KA312SbnYHG-IBmYUM4w9WsJW-tDGuvW81ptYlMpjfetO6vAeVvRYD2N87EKPh8X8Crm3rmTqvEZ5Q4t9ZJkf4fMKv-6WerJwAtwk1ndqR71ua1vOwB_vT11fTcJjaau1GIbsxPm4vb5aGGmDDESZe-9fH2Hvqc-JebCcUhP9YQz5Qn5fByr7ZXTd3eKZ0a37Np2uLQipF5cB54XImf5dS_omTKZf0ckrIrX0LATCFycWINZ7ZHw5eVrzkT7JY7TvcPG7RYNuf4yFhSubx4lF1ZXtjr9UogK58-HjLg4Qop3_Nk1Pflc3lHI0RpCKfKaxEqzIN4OmMhOPftl9tA"
+      }
+    }
+  ],
+  "negative": [
+    {
+      "name": "tampered tag",
+      "accountId": "5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f",
+      "recordId": "8c3f5d21-a06e-4f4d-b112-4d5e6f708192",
+      "vkVersion": 1,
+      "encrypted": {
+        "nonce": "8i4YJQgXYE5HBLiI",
+        "ct": "ipzHw-UcaLyeGc3WYRe7hMul11-vfp-08EDD0wT4T0r1Ro7Yz7Sszx9PJM5VYpPQH84weF9mMquRyQ2fYBysjDqiyrMOHXiYFZmkCxFPSjRwGOVd7Wy9s72wyh1eaOGqG5aANylwUrpeKlDTjVepkKgFLa-Zw3Yf9da8Y0bVL09VPVG4ldKbn8r5-Moxhau6kUIqgmPfEvVzdYRoKv47flxwkMYt3KIYslWhRqfg3s9B4jklnkBhkiW25usu_WJ7EQXBIva9iu21LCBBoTy2GIfQST0JkOAlt5ujFBuNZQN-qEe9p-OWmVhwcVgNFsZmpmtm0nfOL_OquUvXIPAQf25tG2ndMqn9KxHT8X_z11_oxGLnbt1Qdy4gwo1IDsluy1YCCpm31iF_kLrYjo-S3a4j-lZaheu8SoCM9kox4dFSJrnCsZ_2MysKeSXM45m63IKaolpTLBtew2zWp3K7uzsGizl8wPn3K24TMdPtwyCQ34NWSXkzYQkHBvTOICqZCgRH4H-K67vlI_c9TaoU9d2W7JRkxv-n2SvV6HHcJubzdFO8sWTuEx6h4aFd2n_HHlO5W0LcsvOes-zWh7K1NXnw16VmtezjZLrqgwi4A158snFNnzjOhX3gPpf2Vq8b2JQLXONTqKHUl6phmHFQKm-n1wpNdZIvhAFOGRzVJJJOJTwpnn-YOtXyzNbW8n8-"
+      }
+    },
+    {
+      "name": "tampered ciphertext",
+      "accountId": "5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f",
+      "recordId": "8c3f5d21-a06e-4f4d-b112-4d5e6f708192",
+      "vkVersion": 1,
+      "encrypted": {
+        "nonce": "8i4YJQgXYE5HBLiI",
+        "ct": "i5zHw-UcaLyeGc3WYRe7hMul11-vfp-08EDD0wT4T0r1Ro7Yz7Sszx9PJM5VYpPQH84weF9mMquRyQ2fYBysjDqiyrMOHXiYFZmkCxFPSjRwGOVd7Wy9s72wyh1eaOGqG5aANylwUrpeKlDTjVepkKgFLa-Zw3Yf9da8Y0bVL09VPVG4ldKbn8r5-Moxhau6kUIqgmPfEvVzdYRoKv47flxwkMYt3KIYslWhRqfg3s9B4jklnkBhkiW25usu_WJ7EQXBIva9iu21LCBBoTy2GIfQST0JkOAlt5ujFBuNZQN-qEe9p-OWmVhwcVgNFsZmpmtm0nfOL_OquUvXIPAQf25tG2ndMqn9KxHT8X_z11_oxGLnbt1Qdy4gwo1IDsluy1YCCpm31iF_kLrYjo-S3a4j-lZaheu8SoCM9kox4dFSJrnCsZ_2MysKeSXM45m63IKaolpTLBtew2zWp3K7uzsGizl8wPn3K24TMdPtwyCQ34NWSXkzYQkHBvTOICqZCgRH4H-K67vlI_c9TaoU9d2W7JRkxv-n2SvV6HHcJubzdFO8sWTuEx6h4aFd2n_HHlO5W0LcsvOes-zWh7K1NXnw16VmtezjZLrqgwi4A158snFNnzjOhX3gPpf2Vq8b2JQLXONTqKHUl6phmHFQKm-n1wpNdZIvhAFOGRzVJJJOJTwpnn-YOtXyzNbW8n8_"
+      }
+    },
+    {
+      "name": "wrong vkVersion in AAD",
+      "accountId": "5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f",
+      "recordId": "8c3f5d21-a06e-4f4d-b112-4d5e6f708192",
+      "vkVersion": 2,
+      "encrypted": {
+        "nonce": "8i4YJQgXYE5HBLiI",
+        "ct": "ipzHw-UcaLyeGc3WYRe7hMul11-vfp-08EDD0wT4T0r1Ro7Yz7Sszx9PJM5VYpPQH84weF9mMquRyQ2fYBysjDqiyrMOHXiYFZmkCxFPSjRwGOVd7Wy9s72wyh1eaOGqG5aANylwUrpeKlDTjVepkKgFLa-Zw3Yf9da8Y0bVL09VPVG4ldKbn8r5-Moxhau6kUIqgmPfEvVzdYRoKv47flxwkMYt3KIYslWhRqfg3s9B4jklnkBhkiW25usu_WJ7EQXBIva9iu21LCBBoTy2GIfQST0JkOAlt5ujFBuNZQN-qEe9p-OWmVhwcVgNFsZmpmtm0nfOL_OquUvXIPAQf25tG2ndMqn9KxHT8X_z11_oxGLnbt1Qdy4gwo1IDsluy1YCCpm31iF_kLrYjo-S3a4j-lZaheu8SoCM9kox4dFSJrnCsZ_2MysKeSXM45m63IKaolpTLBtew2zWp3K7uzsGizl8wPn3K24TMdPtwyCQ34NWSXkzYQkHBvTOICqZCgRH4H-K67vlI_c9TaoU9d2W7JRkxv-n2SvV6HHcJubzdFO8sWTuEx6h4aFd2n_HHlO5W0LcsvOes-zWh7K1NXnw16VmtezjZLrqgwi4A158snFNnzjOhX3gPpf2Vq8b2JQLXONTqKHUl6phmHFQKm-n1wpNdZIvhAFOGRzVJJJOJTwpnn-YOtXyzNbW8n8_"
+      }
+    },
+    {
+      "name": "swapped record id",
+      "accountId": "5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f",
+      "recordId": "9d4a6e32-b17f-4a5e-8223-5e6f708192a3",
+      "vkVersion": 1,
+      "encrypted": {
+        "nonce": "8i4YJQgXYE5HBLiI",
+        "ct": "ipzHw-UcaLyeGc3WYRe7hMul11-vfp-08EDD0wT4T0r1Ro7Yz7Sszx9PJM5VYpPQH84weF9mMquRyQ2fYBysjDqiyrMOHXiYFZmkCxFPSjRwGOVd7Wy9s72wyh1eaOGqG5aANylwUrpeKlDTjVepkKgFLa-Zw3Yf9da8Y0bVL09VPVG4ldKbn8r5-Moxhau6kUIqgmPfEvVzdYRoKv47flxwkMYt3KIYslWhRqfg3s9B4jklnkBhkiW25usu_WJ7EQXBIva9iu21LCBBoTy2GIfQST0JkOAlt5ujFBuNZQN-qEe9p-OWmVhwcVgNFsZmpmtm0nfOL_OquUvXIPAQf25tG2ndMqn9KxHT8X_z11_oxGLnbt1Qdy4gwo1IDsluy1YCCpm31iF_kLrYjo-S3a4j-lZaheu8SoCM9kox4dFSJrnCsZ_2MysKeSXM45m63IKaolpTLBtew2zWp3K7uzsGizl8wPn3K24TMdPtwyCQ34NWSXkzYQkHBvTOICqZCgRH4H-K67vlI_c9TaoU9d2W7JRkxv-n2SvV6HHcJubzdFO8sWTuEx6h4aFd2n_HHlO5W0LcsvOes-zWh7K1NXnw16VmtezjZLrqgwi4A158snFNnzjOhX3gPpf2Vq8b2JQLXONTqKHUl6phmHFQKm-n1wpNdZIvhAFOGRzVJJJOJTwpnn-YOtXyzNbW8n8_"
+      }
+    },
+    {
+      "name": "wrong accountId",
+      "accountId": "6a1d3b0f-8e4c-4d2b-8f90-2b3c4d5e6f70",
+      "recordId": "8c3f5d21-a06e-4f4d-b112-4d5e6f708192",
+      "vkVersion": 1,
+      "encrypted": {
+        "nonce": "8i4YJQgXYE5HBLiI",
+        "ct": "ipzHw-UcaLyeGc3WYRe7hMul11-vfp-08EDD0wT4T0r1Ro7Yz7Sszx9PJM5VYpPQH84weF9mMquRyQ2fYBysjDqiyrMOHXiYFZmkCxFPSjRwGOVd7Wy9s72wyh1eaOGqG5aANylwUrpeKlDTjVepkKgFLa-Zw3Yf9da8Y0bVL09VPVG4ldKbn8r5-Moxhau6kUIqgmPfEvVzdYRoKv47flxwkMYt3KIYslWhRqfg3s9B4jklnkBhkiW25usu_WJ7EQXBIva9iu21LCBBoTy2GIfQST0JkOAlt5ujFBuNZQN-qEe9p-OWmVhwcVgNFsZmpmtm0nfOL_OquUvXIPAQf25tG2ndMqn9KxHT8X_z11_oxGLnbt1Qdy4gwo1IDsluy1YCCpm31iF_kLrYjo-S3a4j-lZaheu8SoCM9kox4dFSJrnCsZ_2MysKeSXM45m63IKaolpTLBtew2zWp3K7uzsGizl8wPn3K24TMdPtwyCQ34NWSXkzYQkHBvTOICqZCgRH4H-K67vlI_c9TaoU9d2W7JRkxv-n2SvV6HHcJubzdFO8sWTuEx6h4aFd2n_HHlO5W0LcsvOes-zWh7K1NXnw16VmtezjZLrqgwi4A158snFNnzjOhX3gPpf2Vq8b2JQLXONTqKHUl6phmHFQKm-n1wpNdZIvhAFOGRzVJJJOJTwpnn-YOtXyzNbW8n8_"
+      }
+    }
+  ]
+}

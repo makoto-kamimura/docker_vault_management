@@ -1,0 +1,43 @@
+{
+  "description": "Spec 5.4. salt for HKDF = raw 16 bytes of accountId.",
+  "cases": [
+    {
+      "name": "ascii",
+      "masterPasswordUtf8": "correct horse battery staple",
+      "accountId": "5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f",
+      "recoveryKeyHex": "74756d489ec575f3002c24d6e0c45aa4",
+      "recoveryKeyText": "LV2-EHTP-TJ4Y-RNTZ-601C-4KBE-1H2T-MG1D",
+      "kdf": {
+        "alg": "PBKDF2-HMAC-SHA256",
+        "iterations": 600000,
+        "salt": "21wAXY9xVf9odH63fbSeqg"
+      },
+      "expected": {
+        "pbkdf2Hex": "b692f867ea4e3d14fd9f222cc89d7d3df88e7bfa11506a89c82e155f0e222907",
+        "ikmHex": "b692f867ea4e3d14fd9f222cc89d7d3df88e7bfa11506a89c82e155f0e22290774756d489ec575f3002c24d6e0c45aa4",
+        "kekHex": "215c52d86656c25e0e68a560553b528c7b03cc127d3cdf8274f056a158dbbc52",
+        "authKeyHex": "1ce61dce35daba50fc30321ec99f51c82eea3d7dcdfaa3527a0eef47b2c6b153",
+        "verifier": "8km8-S1Etj1pETI3W30f0iMYygVD6NplMUA_mrYZF6Y"
+      }
+    },
+    {
+      "name": "nfkc-no-trim",
+      "masterPasswordUtf8": "ＰＡＳＳ　ｗｏｒｄ１２３４ ",
+      "accountId": "5f0c2a9e-7d3b-4c1a-9e8f-1a2b3c4d5e6f",
+      "recoveryKeyHex": "ed9758dbd2479a8511c76b285def002c",
+      "recoveryKeyText": "LV2-XPBN-HPYJ-8YD8-A4E7-DCM5-VVR0-5GG5",
+      "kdf": {
+        "alg": "PBKDF2-HMAC-SHA256",
+        "iterations": 600000,
+        "salt": "OaFGn14qyn-PztIwOmTduQ"
+      },
+      "expected": {
+        "pbkdf2Hex": "b103ed6055f961205779979613432946ea2eedc8b5e3e2f46cdf7909e2c313f4",
+        "ikmHex": "b103ed6055f961205779979613432946ea2eedc8b5e3e2f46cdf7909e2c313f4ed9758dbd2479a8511c76b285def002c",
+        "kekHex": "0b4c70a6a718f5721596eba3dd9736bf88f452a150cd44b4dc7c535bc75ca93e",
+        "authKeyHex": "5796fbe2efcca5f87a2ef1f01b29395cd1c1e939b647c6ca66b31cb981333551",
+        "verifier": "sx5OcK6sxok-LVTVZIrF1CaEsXYdwy1bXckx0whmqLs"
+      }
+    }
+  ]
+}
