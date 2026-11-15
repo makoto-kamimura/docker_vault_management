@@ -3,7 +3,17 @@
 LocalVault 本体アプリ（Expo SDK 58 / React Native 0.88、New Architecture、expo-router、TypeScript strict）。
 仕様 §14 の全画面（初期設定、ロック解除、項目、パスワード生成、ゴミ箱、PC の承認、端末、設定、アカウント、
 復旧コード、バックアップ、CSV 取り込み、セキュリティ履歴、ヘルプ）を実装済みです。
-VaultCore のネイティブ実装（Swift / Kotlin）は次の段階で作ります。それまでは開発用コア（下記）で動かします。
+VaultCore の iOS ネイティブ実装は `modules/vault-kit`（純 Swift の VaultKit：暗号・保存・同期のエンジン）と
+`modules/vault-core`（Expo モジュール `LocalVaultCore`：Keychain、Face ID、クリップボード、ライフサイクル）にあります。
+ネイティブモジュールがあればそれを使い、なければ開発ビルドに限って開発用コア（下記）で動きます。Android（Kotlin）は未実装です。
+自分の iPhone に入れる手順は [runbook の第 13 章](../../docs/runbook.md#13-iphone-にアプリを入れる無料の-apple-id) を参照してください。
+
+VaultKit のテスト（crypto-vectors、TS 参照実装との差分テスト、エンジンのシナリオ）：
+
+```sh
+pnpm --filter @localvault/mobile test:native     # swift test（シミュレーター不要）
+pnpm --filter @localvault/mobile parity:core     # 差分テストの fixture を TS から再生成
+```
 
 ## 動かし方
 

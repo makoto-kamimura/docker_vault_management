@@ -1,0 +1,7 @@
+{
+  "name": "vault-core",
+  "version": "0.4.0",
+  "private": true,
+  "description": "うちカギ native VaultCore: Expo module bridging VaultKit (spec §15)",
+  "license": "MIT"
+}

@@ -275,3 +275,40 @@ platform/scripts/export-dev-ca.sh   # secrets/dev-root-ca.crt を書き出し、
 ```
 
 この証明書は開発専用です。本番のホストや利用者の端末に入れないでください。
+
+## 13. iPhone にアプリを入れる（無料の Apple ID）
+
+App Store を通さず、自分の iPhone に Mac の Xcode から直接入れる手順です。Apple Developer Program（有料）に加入していなくても使えます。
+
+**無料の Apple ID（Personal Team）での制約**
+
+- 署名の有効期限は **7 日**です。期限が切れるとアプリが起動しなくなるので、7 日以内に下の手順 4 をもう一度実行して入れ直してください。**アプリを削除しなければ、保管庫のデータはそのまま残ります。**
+- プッシュ通知は使えません（`LV_PUSH=0` で通知の機能を外してビルドします）。PC からの解錠リクエストは、アプリを開いている間に確認されます。
+- Bundle ID は自分だけのものにします（例：`jp.<自分の名前>.uchikagi`）。
+- 鍵は iPhone の Keychain に、この端末だけで保存されます。**Apple ID（チーム）を変えると読めなくなる**ので、緊急キット（リカバリーキー）を必ず保管してください。リカバリーキーとマスターパスワードがあれば、別の端末やアプリの入れ直しでも復元できます。
+
+**前提**
+
+- Mac に Xcode と、このリポジトリの開発環境（README の「前提」）
+- サーバーを配置済み（第 2 章）。`https://<LV_DOMAIN>/v1/health` が応答し、招待コードを発行してある
+- iPhone は iOS 17 以上（iPhone 12 mini は対象）。Face ID を設定し、パスコードを有効にしておく（Face ID 用の鍵はパスコードがないと作れません）
+
+**手順**
+
+1. iPhone を USB で Mac につなぎ、「設定 → プライバシーとセキュリティ → デベロッパモード」をオンにして再起動する。
+2. Xcode を開き、「Settings → Accounts」に自分の Apple ID を追加する（Personal Team が作られる）。
+3. ネイティブのプロジェクトを作り、署名のチームを選ぶ。
+   ```sh
+   cd app/mobile
+   LV_BUNDLE_ID=jp.<自分の名前>.uchikagi LV_PUSH=0 npx expo prebuild --platform ios --clean
+   open ios/LocalVault.xcworkspace
+   ```
+   Xcode で「LocalVault」ターゲット →「Signing & Capabilities」→ Team に Personal Team を選ぶ。
+4. Release ビルドを iPhone に入れる。
+   ```sh
+   LV_BUNDLE_ID=jp.<自分の名前>.uchikagi LV_PUSH=0 npx expo run:ios --device --configuration Release
+   ```
+   一覧から自分の iPhone を選ぶ。初回は iPhone の「設定 → 一般 → VPN とデバイス管理」で開発元を信頼する。
+5. アプリの初期設定で、サーバー URL に `https://<LV_DOMAIN>` を入れ、招待コードでアカウントを作る。緊急キットを保存または印刷する。
+
+**更新するとき**：`git pull` してから手順 4 を実行します。7 日ごとの入れ直しも同じ手順です。

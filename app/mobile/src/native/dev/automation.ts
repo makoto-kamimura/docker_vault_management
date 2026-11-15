@@ -101,7 +101,7 @@ async function seed(core: VaultCore, ids: Record<string, string>) {
 async function runStep(
   step: DevStep,
   core: VaultCore,
-  biometric: DevBiometric,
+  biometric: DevBiometric | null,
   result: Result,
 ): Promise<void> {
   const sub = (p: string) => p.replace(/\{(\w+)\}/g, (_w, k: string) => result.ids[k] ?? k);
@@ -157,14 +157,14 @@ async function runStep(
     case 'unlock':
       return core.unlockWithPassword(step.password);
     case 'biometric':
-      biometric.override = step.answer;
+      if (biometric) biometric.override = step.answer;
       return;
     case 'sleep':
       return sleep(step.ms);
   }
 }
 
-export function startDevAutomation(core: VaultCore, biometric: DevBiometric): void {
+export function startDevAutomation(core: VaultCore, biometric: DevBiometric | null): void {
   if (process.env.EXPO_PUBLIC_LV_DEV_AUTOMATION !== '1') return;
   const control = new File(Paths.document, 'dev-control.json');
   const resultFile = new File(Paths.document, 'dev-result.json');

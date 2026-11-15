@@ -3,7 +3,14 @@
 //   2. dev builds only: FakeVaultCore when EXPO_PUBLIC_LV_FAKE_CORE=1 (screens without a server);
 //   3. dev builds only: the development core when EXPO_PUBLIC_LV_DEV_CORE=1 (dynamic import);
 //   4. otherwise: a clear error.
-import type { VaultCore, VaultCoreEventName, VaultCoreEvents } from '@localvault/core';
+import {
+  type VaultCore,
+  VaultCoreError,
+  type VaultCoreErrorCode,
+  type VaultCoreErrorDetails,
+  type VaultCoreEventName,
+  type VaultCoreEvents,
+} from '@localvault/core';
 import { requireOptionalNativeModule } from 'expo';
 import { fakeStartLocked } from '../env';
 
@@ -18,12 +25,47 @@ export type VaultCoreHandle = {
   fetch?: typeof fetch;
 };
 
-type NativeCoreModule = VaultCore & {
+/**
+ * The Expo module (modules/vault-core). Every VaultCore method goes through `call` as JSON text:
+ * `{"method","args"}` in, `{"ok":true,"value"}` or `{"ok":false,"code","message","details"}` out.
+ * Text keeps object key order, which matters because JS sends `JSON.stringify(request.body)` and
+ * the native side signed exactly that serialization (X-LV-Admin covers the body hash).
+ */
+type NativeCoreModule = {
+  call(json: string): Promise<string>;
   addListener<E extends VaultCoreEventName>(
     event: E,
     listener: VaultCoreListener<E>,
   ): { remove(): void };
 };
+
+type Envelope =
+  | { ok: true; value: unknown }
+  | { ok: false; code: VaultCoreErrorCode; message: string; details: VaultCoreErrorDetails | null };
+
+/** A VaultCore whose every method is forwarded to the native `call` (errors become VaultCoreError). */
+function nativeCore(native: NativeCoreModule): VaultCore {
+  const call = async (method: string, args: unknown[]): Promise<unknown> => {
+    const json = JSON.stringify({ method, args: args.map((a) => (a === undefined ? null : a)) });
+    const res = JSON.parse(await native.call(json)) as Envelope;
+    if (!res.ok) throw new VaultCoreError(res.code, res.message, res.details ?? undefined);
+    return res.value === null ? undefined : res.value;
+  };
+  return new Proxy({} as VaultCore, {
+    get(_target, prop) {
+      // Not thenable, not a React element: only plain method names are forwarded.
+      if (
+        typeof prop !== 'string' ||
+        prop === 'then' ||
+        prop === 'toJSON' ||
+        prop.startsWith('$$')
+      ) {
+        return undefined;
+      }
+      return (...args: unknown[]) => call(prop, args);
+    },
+  });
+}
 
 let handlePromise: Promise<VaultCoreHandle> | null = null;
 let current: VaultCoreHandle | null = null;
@@ -31,9 +73,15 @@ let current: VaultCoreHandle | null = null;
 async function resolveHandle(): Promise<VaultCoreHandle> {
   const native = requireOptionalNativeModule<NativeCoreModule>('LocalVaultCore');
   if (native) {
+    const core = nativeCore(native);
+    // Development builds only: the shell-driven automation also works with the native core.
+    if (__DEV__ && process.env.EXPO_PUBLIC_LV_DEV_AUTOMATION === '1') {
+      const { startDevAutomation } = await import('./dev/automation');
+      startDevAutomation(core, null);
+    }
     return {
       kind: 'native',
-      core: native,
+      core,
       on: (event, listener) => {
         const sub = native.addListener(event, listener);
         return () => sub.remove();
