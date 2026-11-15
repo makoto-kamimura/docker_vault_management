@@ -15,8 +15,9 @@ import { nav } from '../../lib/nav';
 import { estimateStrength } from '../../lib/passwordStrength';
 import { useSetupDraft } from '../../state/setupDraft';
 import { describeError } from '../errors/messages';
+import { LongTaskNotice } from '../session/LongTaskNotice';
 import { useSession } from '../session/SessionProvider';
-import { createAccountFlow } from './flows';
+import { type CreateProgress, createAccountFlow } from './flows';
 
 type Form = { invite: string; accountName: string; password: string; confirm: string };
 
@@ -36,6 +37,7 @@ export function CreateScreen() {
   const draft = useSetupDraft();
   const toast = useToast();
   const [busy, setBusy] = useState(false);
+  const [step, setStep] = useState<CreateProgress>('keys');
   const needsInvite = draft.registrationMode !== 'open';
   const { control, handleSubmit, watch } = useForm<Form>({
     defaultValues: { invite: '', accountName: draft.accountName, password: '', confirm: '' },
@@ -55,6 +57,7 @@ export function CreateScreen() {
         accountName: v.accountName,
         masterPassword: v.password,
         inviteCode: v.invite,
+        onProgress: setStep,
       });
       if (name.ok) draft.setAccountName(name.name);
       draft.setRecoveryKey(recoveryKey);
@@ -73,7 +76,7 @@ export function CreateScreen() {
     <Screen
       title={t('setup.create.title')}
       subtitle={t('setup.create.lead')}
-      onBack={nav.back}
+      onBack={busy ? undefined : nav.back}
       footer={
         <Button
           testID="create-submit"
@@ -83,6 +86,11 @@ export function CreateScreen() {
         />
       }
     >
+      <LongTaskNotice
+        active={busy}
+        steps={[t('setup.create.step.keys'), t('setup.create.step.register')]}
+        current={step === 'keys' ? 0 : 1}
+      />
       {needsInvite && (
         <Controller
           control={control}

@@ -235,6 +235,8 @@ describe('route table', () => {
       }).success,
     ).toBe(false);
     expect(acct.safeParse({ ...body, accountName: 'Alice' }).success).toBe(false);
+    // open mode: the app sends no invite code
+    expect(acct.safeParse({ ...body, inviteCode: '' }).success).toBe(true);
   });
   it('buildPath', () => {
     expect(buildPath(routes.deleteDevice.path, { id: ID })).toBe(`/v1/devices/${ID}`);

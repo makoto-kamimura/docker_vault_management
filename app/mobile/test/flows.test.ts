@@ -29,6 +29,20 @@ describe('account creation flow', () => {
     expect((await core.getAccountInfo()).accountName).toBe('alice');
   });
 
+  it('reports key generation before registering with the server', async () => {
+    const steps: string[] = [];
+    await createAccountFlow({
+      core: new FakeVaultCore(),
+      makeApi: makeApiWith(createFakeFetch()),
+      serverUrl: 'https://vault.example.com',
+      accountName: 'alice',
+      masterPassword: 'correct horse battery',
+      inviteCode: '',
+      onProgress: (s) => steps.push(s),
+    });
+    expect(steps).toEqual(['keys', 'register']);
+  });
+
   it('discards the pending account when the server refuses', async () => {
     const core = new FakeVaultCore();
     const { fetch } = makeFetch(() => apiError(403, 'E_REGISTRATION_CLOSED'));

@@ -34,6 +34,7 @@ describe('registration modes', () => {
     await api.err('createAccount', 'E_REGISTRATION_CLOSED', { body: accountBody().body });
     env.config.registrationMode = 'invite';
     await api.err('createAccount', 'E_REGISTRATION_CLOSED', { body: accountBody('nope').body });
+    await api.err('createAccount', 'E_REGISTRATION_CLOSED', { body: accountBody('').body });
 
     const inv = await createInvite(env.deps.db, 86_400_000, env.clock.now());
     await api.ok('createAccount', { body: accountBody(inv.code).body });
@@ -55,6 +56,10 @@ describe('registration modes', () => {
       body: accountBody(revoked.code).body,
     });
     env.config.registrationMode = 'open';
+  });
+
+  test('open accepts an empty invite code (the app hides the field)', async () => {
+    await api.ok('createAccount', { body: accountBody('').body });
   });
 });
 
