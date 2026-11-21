@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Draws the うちカギ app icons (assets/icon.png, assets/adaptive-icon.png) with Pillow.
+"""Draws the うちカギ icons with Pillow: the app icons (assets/icon.png, assets/adaptive-icon.png)
+and the browser extension icons (app/extension/public/icon/<size>.png, picked up by WXT).
 
 The geometry and colours mirror `brand` / `brandMark` in app/packages/design-tokens/src/tokens.ts
 (keep both in sync). Usage, from app/mobile: python3 scripts/generate-icons.py
@@ -20,6 +21,9 @@ BARS = [(484, 628, 56, 222), (538, 740, 78, 42), (538, 800, 58, 42)]
 
 SUPERSAMPLE = 4
 ASSETS = Path(__file__).resolve().parent.parent / "assets"
+EXTENSION_ICONS = Path(__file__).resolve().parents[2] / "extension" / "public" / "icon"
+EXTENSION_SIZES = (16, 32, 48, 128)
+CORNER = 0.22  # corner radius of the extension icon, as a share of its width
 
 
 def draw_mark(size: int, mark_scale: float) -> Image.Image:
@@ -44,9 +48,27 @@ def draw_mark(size: int, mark_scale: float) -> Image.Image:
     return img.resize((size, size), Image.LANCZOS)
 
 
+def draw_rounded(size: int) -> Image.Image:
+    """The mark on a 藍 square with rounded, transparent corners (browsers do not mask icons)."""
+    big = 512
+    img = draw_mark(big, 1.0)
+    mask = Image.new("L", (big * SUPERSAMPLE, big * SUPERSAMPLE), 0)
+    ImageDraw.Draw(mask).rounded_rectangle(
+        [0, 0, big * SUPERSAMPLE - 1, big * SUPERSAMPLE - 1],
+        radius=big * SUPERSAMPLE * CORNER,
+        fill=255,
+    )
+    img.putalpha(mask.resize((big, big), Image.LANCZOS))
+    return img.resize((size, size), Image.LANCZOS)
+
+
 if __name__ == "__main__":
     # iOS masks the corners itself; the mark fills the canvas as designed.
     draw_mark(1024, 1.0).save(ASSETS / "icon.png")
     # Android adaptive icon: keep the mark inside the central safe zone (~66%).
     draw_mark(512, 0.62).save(ASSETS / "adaptive-icon.png")
     print("wrote", ASSETS / "icon.png", "and", ASSETS / "adaptive-icon.png")
+    EXTENSION_ICONS.mkdir(parents=True, exist_ok=True)
+    for size in EXTENSION_SIZES:
+        draw_rounded(size).save(EXTENSION_ICONS / f"{size}.png")
+    print("wrote", EXTENSION_ICONS, EXTENSION_SIZES)
